@@ -91,13 +91,21 @@ Same code as macOS. Below 700 pt it switches to the native tab bar, with Kestrel
 ### Windows: WinUI 3
 Mica title bar, `NavigationView` styled as Steam's top bar, XY focus navigation, and gamepad support through `Windows.Gaming.Input`.
 
-> [!IMPORTANT]
-> This client was written on a Mac and has **not been compiled or run yet**.
-> The XAML compiler only runs on Windows. The C# was type-checked against the
-> real Windows App SDK 1.8, and the XAML was checked against WinUI metadata.
-> The first real build, and the screenshots, come from
-> [`windows.yml`](.github/workflows/windows.yml) on GitHub's `windows-latest`
-> runners. Screenshots will land in [`docs/screenshots/windows`](docs/screenshots/windows).
+<table>
+<tr><td><img src="docs/screenshots/windows/store.png" width="440" alt="windows store"></td><td><img src="docs/screenshots/windows/library.png" width="440" alt="windows library"></td></tr>
+<tr><td><img src="docs/screenshots/windows/community.png" width="440" alt="windows community"></td><td><img src="docs/screenshots/windows/profile.png" width="440" alt="windows profile"></td></tr>
+</table>
+
+<details><summary>Game page, store page, gamepad mode, compact</summary>
+
+<table>
+<tr><td><img src="docs/screenshots/windows/game.png" width="440" alt="windows game"></td><td><img src="docs/screenshots/windows/app.png" width="440" alt="windows app"></td></tr>
+<tr><td><img src="docs/screenshots/windows/gamepad.png" width="440" alt="windows gamepad"></td></tr>
+</table>
+<img src="docs/screenshots/windows/library-compact.png" width="220" alt="windows compact library"> <img src="docs/screenshots/windows/store-compact.png" width="220" alt="windows compact store">
+</details>
+
+<sub>Written on a Mac; built and screenshotted on GitHub's `windows-latest` runners by [`windows.yml`](.github/workflows/windows.yml).</sub>
 
 ### Linux: GTK 4 + libadwaita (Rust)
 Uses the shared Rust crate `steam-model` directly. `AdwBreakpoint`s switch the layout from a Steam top bar to an `AdwViewSwitcherBar` on narrow windows.
@@ -158,7 +166,7 @@ When a controller is the last thing you touched, every client shows a Big
 Picture-style focus ring and button-hint bar:
 
 <table><tr>
-<td><img src="docs/screenshots/web/gamepad.png" width="440" alt="web gamepad"></td>
+<td><img src="docs/screenshots/windows/gamepad.png" width="440" alt="windows gamepad"></td>
 <td><img src="docs/screenshots/linux/gamepad.png" width="440" alt="linux gamepad"></td>
 </tr></table>
 
