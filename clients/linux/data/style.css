@@ -1,0 +1,1328 @@
+/*
+ * Native Steam — GTK 4 / libadwaita client.
+ *
+ * Brand tokens from docs/DESIGN.md §1. Values are written as literals so the
+ * sheet works on GTK 4.14 (no CSS variables) and newer alike; the token name
+ * is noted next to each first use. libadwaita's own named colours are
+ * overridden in style-adw15.css (@define-color, libadwaita 1.5) or
+ * style-adw16.css (CSS variables, libadwaita >= 1.6).
+ *
+ *   bgChrome #171a21 · surface #16202d · surfaceNeutral #23262e
+ *   surfaceHover #2a475e · textTitle #fff · textBody #c7d5e0
+ *   textSecondary #8f98a0 · textMuted #67707b · accent #1a9fff
+ *   accentLink #66c0f4
+ */
+
+/* ------------------------------------------------------------------ shell */
+
+window.steam {
+  background-color: #171a21; /* bgChrome */
+  color: #c7d5e0;            /* textBody */
+}
+
+.bg-store {
+  background-color: #1b2838;
+  background-image: linear-gradient(to bottom, #1b2838, #0e1620); /* bgStore */
+}
+
+.bg-library {
+  background-color: #1e2329;
+  background-image: linear-gradient(to bottom, #1e2329, #0e1014); /* bgLibrary */
+}
+
+/* Detail pages fade their hero artwork into the page colour, so hold the top
+   of the gradient flat underneath the hero to avoid a seam. */
+.bg-store.detail {
+  background-image: linear-gradient(to bottom, #1b2838, #1b2838 640px, #0e1620);
+}
+
+.bg-library.detail {
+  background-image: linear-gradient(to bottom, #1e2329, #1e2329 480px, #0e1014);
+}
+
+headerbar.steam-header {
+  background-color: #171a21;
+  color: #c7d5e0;
+  box-shadow: inset 0 -1px rgba(255, 255, 255, 0.06);
+  min-height: 52px;
+}
+
+.wordmark {
+  font-weight: 900;
+  font-size: 19px;
+  letter-spacing: 4px;
+  color: #dcdedf;
+  margin: 0 22px 0 8px;
+}
+
+.tab-strip {
+  margin-top: -8px;
+  margin-bottom: -8px;
+}
+
+.tab-strip button.tab {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1.2px; /* ~0.08em */
+  color: #8f98a0;        /* textSecondary */
+  background: none;
+  border-radius: 0;
+  padding: 0 14px;
+  min-height: 52px;
+  box-shadow: inset 0 -3px transparent;
+  transition: color 120ms ease-out, box-shadow 120ms ease-out;
+}
+
+.tab-strip button.tab:hover {
+  color: #dcdedf;
+}
+
+.tab-strip button.tab:checked {
+  color: #ffffff;
+  background: none;
+  box-shadow: inset 0 -3px #1a9fff; /* 3px accent underline */
+}
+
+.tab-strip button.tab:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -8px;
+}
+
+.tab-strip .bumper {
+  margin: 0 6px;
+}
+
+headerbar.steam-header button.flat {
+  color: #c7d5e0;
+}
+
+.me-button {
+  padding: 2px 10px 2px 4px;
+}
+
+.me-name {
+  font-weight: 600;
+  color: #c7d5e0;
+}
+
+.friends-count {
+  font-weight: 700;
+  font-size: 13px;
+  color: #57cbde;
+}
+
+/* Compact bottom tab bar (AdwViewSwitcherBar). */
+.steam-tabbar,
+.steam-tabbar actionbar,
+.steam-tabbar actionbar > revealer > box {
+  background-color: #171a21;
+  box-shadow: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.steam-tabbar button {
+  color: #8f98a0;
+  border-radius: 6px;
+}
+
+.steam-tabbar button label {
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.steam-tabbar button image {
+  -gtk-icon-size: 20px;
+}
+
+.steam-tabbar button:checked {
+  color: #ffffff;
+  background-color: rgba(26, 159, 255, 0.14);
+}
+
+.steam-tabbar button:checked image {
+  color: #1a9fff;
+}
+
+/* --------------------------------------------------------- gamepad hints */
+
+.hints-bar {
+  background-color: rgba(23, 26, 33, 0.95); /* bgChrome @ 95% */
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 10px 28px;
+  min-height: 28px;
+}
+
+.hint-device {
+  font-weight: 600;
+  color: #8f98a0;
+}
+
+.hint-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #dcdedf;
+}
+
+.pad-glyph {
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #3d4450;
+}
+
+.pad-glyph.a { background-color: #3a9b3f; }
+.pad-glyph.b { background-color: #c8413b; }
+.pad-glyph.x { background-color: #2f73d9; }
+.pad-glyph.y { background-color: #d9a72b; color: #1b1b1b; }
+
+.pad-glyph.bumper {
+  border-radius: 6px;
+  min-width: 30px;
+  min-height: 20px;
+  padding: 0 4px;
+  font-size: 10px;
+  background-color: #3d4450;
+  color: #dcdedf;
+}
+
+/* ------------------------------------------------------------- typography */
+
+.section-header {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px; /* ~0.06em */
+  color: rgba(255, 255, 255, 0.9);
+}
+
+button.see-all {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8f98a0;
+  padding: 2px 8px;
+  min-height: 0;
+}
+
+button.see-all:hover {
+  color: #ffffff;
+}
+
+.meta {
+  font-size: 12px;
+  color: #8f98a0;
+}
+
+.body-text {
+  font-size: 14px;
+  color: #c7d5e0;
+  line-height: 1.4;
+}
+
+.accent-text { color: #66c0f4; }
+.link { color: #66c0f4; }
+
+/* ------------------------------------------------------------------ art */
+
+art {
+  background-color: #1d2a3a;
+  color: #67707b;
+}
+
+.bg-library art {
+  background-color: #2a2e36;
+}
+
+art picture {
+  opacity: 0;
+  transition: opacity 260ms ease-out;
+}
+
+art.loaded picture {
+  opacity: 1;
+}
+
+art.instant picture {
+  transition: none;
+}
+
+art.logo,
+art.page-bg-art,
+art.loaded {
+  background-color: transparent;
+}
+
+art.rounded,
+art.thumb,
+art.screenshot {
+  border-radius: 6px;
+}
+
+art.thumb {
+  border-radius: 3px;
+}
+
+.art-placeholder {
+  font-weight: 700;
+  font-size: 13px;
+  color: #67707b;
+  padding: 10px;
+}
+
+art.avatar {
+  border-radius: 4px;
+  border: 2px solid #3d4450;
+  background-color: #23262e;
+}
+
+art.avatar.status-ingame  { border-color: #90ba3c; }
+art.avatar.status-online  { border-color: #57cbde; }
+art.avatar.status-away    { border-color: rgba(87, 203, 222, 0.5); }
+art.avatar.status-offline { border-color: #5b5f66; }
+
+/* ---------------------------------------------------------------- tiles */
+
+button.tile {
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  min-height: 0;
+  min-width: 0;
+  background-color: #16202d; /* surface */
+  background-image: none;
+  color: #c7d5e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  outline: 0 solid transparent;
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out,
+              background-color 120ms ease-out;
+}
+
+.bg-library button.tile {
+  background-color: #23262e; /* surfaceNeutral */
+}
+
+button.tile:hover {
+  background-color: #2a475e; /* surfaceHover */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+button.tile:active {
+  transform: scale(0.98);
+}
+
+/* Focus: 2px white inner ring + 4px accent @ 55% outer glow, scale 1.04. */
+button.tile:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 4px rgba(26, 159, 255, 0.55), 0 12px 28px rgba(0, 0, 0, 0.55);
+  background-color: #2a475e;
+  transform: scale(1.04);
+}
+
+button.tile.hero-card:focus-visible,
+button.tile.panel-tile:focus-visible,
+button.tile.favorite-card:focus-visible {
+  transform: scale(1.012);
+}
+
+button.tile.row-tile:focus-visible {
+  transform: scale(1.02);
+}
+
+button.tile:focus-visible art {
+  filter: brightness(1.12);
+}
+
+window.touch button.tile:hover {
+  transform: none;
+}
+
+/* Generic focus treatment for everything else. */
+button:focus-visible,
+row:focus-visible,
+dropdown > button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 4px rgba(26, 159, 255, 0.55);
+}
+
+entry:focus-within {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 4px rgba(26, 159, 255, 0.55);
+}
+
+.tile-body {
+  padding: 10px 12px 12px 12px;
+}
+
+.tile-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.tile-meta {
+  font-size: 12px;
+  color: #8f98a0;
+}
+
+.shelf-row {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.chip-scroller .chip-row {
+  margin: 6px 4px;
+}
+
+/* ----------------------------------------------------------- chips, pills */
+
+button.chip {
+  border-radius: 999px;
+  padding: 4px 14px;
+  min-height: 30px;
+  background-color: rgba(103, 193, 245, 0.14);
+  color: #67c1f5;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+button.chip:hover {
+  background-color: #2a475e;
+  color: #ffffff;
+}
+
+button.chip:checked {
+  background-color: #1a9fff;
+  color: #ffffff;
+}
+
+.pill {
+  background-color: rgba(103, 193, 245, 0.15);
+  color: #67c1f5;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+/* ----------------------------------------------------------- price block */
+
+.discount-badge {
+  background-color: #4c6b22; /* discountBg */
+  color: #beee11;            /* discountText */
+  font-weight: 700;
+  font-size: 15px;
+  padding: 0 6px;
+  border-radius: 2px 0 0 2px;
+}
+
+.price-stack {
+  background-color: rgba(0, 0, 0, 0.25); /* priceBg */
+  padding: 2px 8px;
+  border-radius: 0 2px 2px 0;
+}
+
+.price-original {
+  font-size: 11px;
+  color: #738895; /* priceOriginal */
+}
+
+.price-final {
+  font-size: 13px;
+  color: #c7d5e0;
+}
+
+.price-final.discounted {
+  color: #beee11; /* priceFinal (discounted) */
+}
+
+.price-plain {
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 5px 8px;
+  border-radius: 2px;
+}
+
+.price-final.soon {
+  color: #8f98a0;
+}
+
+.price-block.large .discount-badge {
+  font-size: 22px;
+  padding: 0 10px;
+}
+
+.price-block.large .price-original { font-size: 12px; }
+.price-block.large .price-final { font-size: 16px; }
+.price-block.large .price-plain { padding: 9px 12px; }
+
+/* ----------------------------------------------------------- glyphs */
+
+.platforms image {
+  color: #8f98a0;
+}
+
+.tone-dot {
+  min-width: 8px;
+  min-height: 8px;
+  border-radius: 999px;
+  background-color: #67707b;
+}
+
+.tone-dot.tone-positive { background-color: #66c0f4; }
+.tone-dot.tone-mixed    { background-color: #b9a074; }
+.tone-dot.tone-negative { background-color: #a34c25; }
+
+.review-label.tone-positive { color: #66c0f4; }
+.review-label.tone-mixed    { color: #b9a074; }
+.review-label.tone-negative { color: #a34c25; }
+.review-label { font-weight: 600; font-size: 13px; }
+
+.live-dot {
+  min-width: 8px;
+  min-height: 8px;
+  border-radius: 999px;
+  background-color: #90ba3c;
+  box-shadow: 0 0 6px rgba(144, 186, 60, 0.8);
+}
+
+.live-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #90ba3c;
+}
+
+.online-text {
+  font-weight: 600;
+  color: #57cbde;
+}
+
+progressbar.thin trough {
+  min-width: 24px;
+  min-height: 6px;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+progressbar.thin progress {
+  min-height: 6px;
+  border-radius: 3px;
+  background-color: #1a9fff;
+  background-image: linear-gradient(to right, #47bfff, #1a9fff);
+}
+
+/* ------------------------------------------------------------ list rows */
+
+button.tile.row-tile {
+  border-radius: 4px;
+  background-color: rgba(22, 32, 45, 0.92);
+}
+
+.bg-library button.tile.row-tile {
+  background-color: rgba(35, 38, 46, 0.9);
+}
+
+.list-row {
+  padding: 8px 14px 8px 8px;
+}
+
+.row-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.rank {
+  font-size: 15px;
+  font-weight: 800;
+  color: #67707b;
+}
+
+/* ----------------------------------------------------------------- store */
+
+.search-row {
+  margin-top: 22px;
+}
+
+entry.steam-search,
+.steam-search {
+  background-color: rgba(49, 98, 130, 0.6);
+  color: #ffffff;
+  border-radius: 4px;
+  min-height: 36px;
+}
+
+.bg-library entry.steam-search,
+.bg-library .steam-search {
+  background-color: #2b2f37;
+}
+
+.featured {
+  margin-bottom: 4px;
+}
+
+button.tile.featured-card {
+  background-color: #0f1b26;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+}
+
+.featured-panel {
+  padding: 18px 20px 18px 20px;
+  background-image: linear-gradient(160deg, #1c3a52, #0d1a26);
+}
+
+.featured-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.featured-status {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+button.carousel-arrow {
+  min-width: 32px;
+  min-height: 110px;
+  padding: 0;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+button.carousel-arrow:hover {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+}
+
+carouselindicatordots {
+  color: #ffffff;
+}
+
+.featured-compact-info {
+  padding: 12px 14px;
+}
+
+.featured-compact-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.scrim { background-color: transparent; }
+
+.scrim-bottom {
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.8));
+}
+
+.offer-ends {
+  color: #8f98a0;
+}
+
+/* Store app page */
+
+.scrim-page-bg {
+  background-image: linear-gradient(to bottom, rgba(27, 40, 56, 0.55),
+                                    rgba(27, 40, 56, 0.82) 62%, #1b2838);
+}
+
+.page-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.app-side .fact-key,
+.fact-key {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: #556772;
+}
+
+.fact-value {
+  font-size: 13px;
+  color: #c7d5e0;
+}
+
+.metacritic {
+  background-color: #66cc33;
+  color: #ffffff;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.thumb-strip {
+  margin: 4px 2px 10px 2px;
+}
+
+button.thumb-button {
+  padding: 0;
+  border-radius: 3px;
+  min-height: 0;
+  min-width: 0;
+  background: none;
+  opacity: 0.75;
+}
+
+button.thumb-button:hover {
+  opacity: 1;
+}
+
+.purchase-box {
+  background-image: linear-gradient(120deg, rgba(84, 107, 115, 0.38), rgba(226, 244, 255, 0.16));
+  border-radius: 4px;
+  padding: 16px 18px;
+}
+
+.purchase-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+button.install-button,
+button.play-button {
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 8px 22px;
+  min-height: 40px;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+button.install-button {
+  background-color: #1a9fff;
+  background-image: linear-gradient(to right, #47bfff, #1a44c2); /* install */
+}
+
+button.install-button:hover {
+  background-image: linear-gradient(to right, #6dceff, #2a5ce0);
+}
+
+button.play-button {
+  background-color: #75b022;
+  background-image: linear-gradient(to right, #75b022, #588a1b); /* play */
+}
+
+button.play-button:hover {
+  background-image: linear-gradient(to right, #8ed629, #6aa621);
+}
+
+button.secondary-button {
+  background-color: rgba(103, 193, 245, 0.2);
+  color: #67c1f5;
+  border-radius: 3px;
+  padding: 6px 16px;
+  min-height: 34px;
+  font-weight: 600;
+}
+
+button.secondary-button:hover {
+  background-image: linear-gradient(-60deg, #417a9b 5%, #67c1f5 95%);
+  color: #ffffff;
+}
+
+.feature-badge {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #67c1f5;
+  font-weight: 600;
+}
+
+.feature-badges {
+  margin-bottom: 40px;
+}
+
+/* --------------------------------------------------------------- library */
+
+.library-sidebar {
+  background-color: #171a21; /* bgChrome */
+  box-shadow: inset -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #67707b;
+  margin: 12px 4px 2px 4px;
+}
+
+list.collections {
+  background: none;
+  padding: 0 8px 12px 8px;
+}
+
+list.collections row {
+  border-radius: 4px;
+  padding: 2px 10px;
+  min-height: 34px;
+  margin: 1px 0;
+  color: #c7d5e0;
+}
+
+list.collections row:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+list.collections row:selected {
+  background-color: #2a475e;
+  color: #ffffff;
+}
+
+list.collections row:selected image {
+  color: #1a9fff;
+}
+
+.collection-name {
+  font-weight: 500;
+}
+
+.count {
+  font-size: 12px;
+  color: #67707b;
+}
+
+.sidebar-footer {
+  padding: 12px 16px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.library-top {
+  margin-top: 18px;
+}
+
+.sort-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #67707b;
+}
+
+dropdown.sort-dropdown > button {
+  background-color: #2b2f37;
+  color: #c7d5e0;
+  border-radius: 4px;
+  min-height: 30px;
+  padding: 2px 10px;
+}
+
+.library-grid {
+  margin-bottom: 40px;
+}
+
+button.tile.cover {
+  border-radius: 4px;
+  background-color: #2a2e36;
+}
+
+.cover-caption {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0));
+  padding: 28px 8px 8px 8px;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+button.cover:hover .cover-caption,
+button.cover:focus-visible .cover-caption {
+  opacity: 1;
+}
+
+.cover-name {
+  font-weight: 700;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+button.cover.not-installed art {
+  opacity: 0.62;
+}
+
+button.cover.not-installed:hover art,
+button.cover.not-installed:focus-visible art {
+  opacity: 0.92;
+}
+
+.fav-star {
+  color: #ffc82c;
+  margin: 8px;
+  -gtk-icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.update-dot {
+  min-width: 10px;
+  min-height: 10px;
+  border-radius: 999px;
+  margin: 9px;
+  background-color: #1a9fff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
+}
+
+.not-installed-glyph {
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 999px;
+  padding: 5px;
+  margin: 8px;
+}
+
+button.tile.recent-card {
+  border-radius: 6px;
+}
+
+.recent-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 12px 14px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Game page */
+
+.scrim-hero {
+  background-image: linear-gradient(to bottom, rgba(30, 35, 41, 0) 40%,
+                                    rgba(30, 35, 41, 0.75) 82%, #1e2329);
+}
+
+.hero-title {
+  font-size: 40px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.hero-title.small {
+  font-size: 22px;
+}
+
+.game-bar {
+  padding: 14px 0 18px 0;
+}
+
+.primary-label {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+
+.button-sub {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.game-bar button.primary-action {
+  min-width: 190px;
+  min-height: 50px;
+}
+
+.purchase-actions button.primary-action {
+  min-width: 140px;
+}
+
+.purchase-actions button.install-button,
+.purchase-actions button.play-button,
+.purchase-actions button.secondary-button {
+  min-height: 44px;
+  padding: 0 20px;
+}
+
+.stat-key {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #67707b;
+}
+
+.stat-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #c7d5e0;
+}
+
+button.icon-button {
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #c7d5e0;
+}
+
+button.icon-button:hover {
+  background-color: #2a475e;
+  color: #ffffff;
+}
+
+button.fav-toggle:checked {
+  color: #ffc82c;
+  background-color: rgba(255, 200, 44, 0.12);
+}
+
+.game-columns {
+  margin-top: 6px;
+}
+
+.game-columns .section-header,
+.side-card .section-header,
+.rail .section-header,
+.news-column .section-header {
+  margin-top: 0;
+}
+
+.achievement-icon {
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.achievement-icon.locked {
+  filter: grayscale(1) brightness(0.6);
+  opacity: 0.55;
+}
+
+.achievement-progress {
+  margin-bottom: 6px;
+}
+
+.side-card {
+  background-color: rgba(0, 0, 0, 0.22);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+/* ------------------------------------------------------------- community */
+
+button.tile.panel-tile {
+  background-color: rgba(22, 32, 45, 0.92);
+}
+
+.activity-card {
+  padding: 16px;
+}
+
+.activity-line {
+  font-size: 14px;
+  color: #c7d5e0;
+}
+
+.achievement-body,
+.game-ref {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.review-verdict.recommended image { color: #66c0f4; }
+.review-verdict.not-recommended image { color: #a34c25; }
+
+.verdict {
+  font-weight: 700;
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.review-quote {
+  font-style: italic;
+  font-size: 14px;
+  color: #acb2b8;
+}
+
+.ingame-text { color: #90ba3c; }
+
+.activity-footer image {
+  color: #8f98a0;
+}
+
+.news-card {
+  padding: 12px;
+}
+
+.news-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.news-excerpt {
+  font-size: 12px;
+  color: #8f98a0;
+}
+
+.rail, .news-column, .activity-column {
+  margin-top: 26px;
+}
+
+.segmented {
+  margin-top: 16px;
+}
+
+.segmented button {
+  background-color: #23262e;
+  color: #8f98a0;
+  font-weight: 700;
+  min-height: 34px;
+}
+
+.segmented button:checked {
+  background-color: #1a9fff;
+  color: #ffffff;
+}
+
+.friend-group {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #67707b;
+  margin-top: 10px;
+}
+
+.friend-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.friend-status {
+  font-size: 12px;
+  color: #8f98a0;
+}
+
+.friend-row.status-ingame .friend-name,
+.friend-row.status-ingame .friend-status { color: #90ba3c; }
+.friend-row.status-online .friend-name   { color: #57cbde; }
+.friend-row.status-away .friend-name     { color: rgba(87, 203, 222, 0.55); }
+.friend-row.status-offline .friend-name  { color: #898989; }
+.friend-row.status-offline art           { opacity: 0.6; }
+
+.level-chip {
+  border: 2px solid #8f98a0;
+  border-radius: 999px;
+  min-width: 24px;
+  min-height: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  padding: 0 4px;
+}
+
+.friends-page {
+  margin-top: 8px;
+  margin-bottom: 32px;
+}
+
+/* --------------------------------------------------------------- profile */
+
+.scrim-banner {
+  background-image: linear-gradient(to bottom, rgba(14, 16, 20, 0.15),
+                                    rgba(14, 16, 20, 0.55) 55%, #1e2329);
+}
+
+art.profile-avatar {
+  border: 3px solid #57cbde; /* statusOnline */
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
+}
+
+.persona-name {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.persona-sub {
+  font-size: 15px;
+  color: #c7d5e0;
+}
+
+.level-box {
+  background-color: rgba(0, 0, 0, 0.45);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+
+.level-word {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.level-ring {
+  border: 3px solid #8f98a0;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.profile-body {
+  margin-top: 4px;
+  margin-bottom: 48px;
+}
+
+.summary-text {
+  font-size: 15px;
+}
+
+.years-pill {
+  background-color: rgba(199, 166, 75, 0.18);
+  color: #e0c068;
+}
+
+.stats-card {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  padding: 16px 8px;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.stat-caption {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #8f98a0;
+}
+
+button.tile.favorite-card {
+  border-radius: 6px;
+}
+
+.favorite-info {
+  padding: 16px 18px;
+}
+
+.recent-row {
+  padding: 10px;
+}
+
+.showcase {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 16px 8px;
+}
+
+.rare-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.medal {
+  border-radius: 999px;
+  color: #ffffff;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.28), 0 4px 10px rgba(0, 0, 0, 0.45);
+}
+
+.medal image {
+  -gtk-icon-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.badge-level {
+  background-color: #171a21;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.badge-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #c7d5e0;
+}
+
+.face-name {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.face-name.status-ingame  { color: #90ba3c; }
+.face-name.status-online  { color: #57cbde; }
+.face-name.status-away    { color: rgba(87, 203, 222, 0.55); }
+.face-name.status-offline { color: #898989; }
+
+/* --------------------------------------------------------------- medium */
+
+window.medium .tab-strip button.tab {
+  padding: 0 8px;
+  letter-spacing: 0.6px;
+}
+
+window.medium .wordmark {
+  margin-right: 8px;
+  letter-spacing: 3px;
+}
+
+/* -------------------------------------------------------------- compact */
+
+window.compact .section-title {
+  font-size: 13px;
+}
+
+window.compact .section-header {
+  margin-top: 22px;
+}
+
+window.compact .page-title {
+  font-size: 24px;
+}
+
+window.compact .persona-name {
+  font-size: 26px;
+}
+
+window.compact .hero-title {
+  font-size: 28px;
+}
+
+window.compact .hints-bar {
+  padding: 8px 10px;
+}
+
+window.compact .game-bar button.primary-action {
+  min-width: 124px;
+}
+
+window.compact button.icon-button {
+  min-width: 38px;
+  min-height: 38px;
+}
+
+window.compact .favorite-info {
+  padding: 12px;
+}
+
+window.compact .purchase-actions .price-block {
+  margin-bottom: 4px;
+}
+
+window.compact .stat-number {
+  font-size: 16px;
+}
+
+window.compact .stats-card {
+  padding: 12px 4px;
+}
+
+window.compact .stat-caption {
+  font-size: 9px;
+  letter-spacing: 0.4px;
+}

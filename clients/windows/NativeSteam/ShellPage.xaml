@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NativeSteam.ShellPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:NativeSteam.Controls"
+    Background="Transparent"
+    Foreground="{StaticResource TextBodyBrush}">
+
+    <Grid x:Name="RootGrid" XYFocusKeyboardNavigation="Enabled">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--
+            Wide (≥ 1100 epx): full Steam-desktop top bar. Regular (700–1100): same bar, labels trimmed so the
+            four tabs never overflow. Compact (< 700): tab strip replaced by a bottom tab bar (DESIGN.md §2).
+        -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="LayoutStates">
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1100" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="RegularLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="700" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FriendsButtonLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="PersonaPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="WordmarkText.Visibility" Value="Collapsed" />
+                        <Setter Target="WordmarkPanel.Margin" Value="14,0,8,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CompactLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TopNav.Visibility" Value="Collapsed" />
+                        <Setter Target="BottomTabs.Visibility" Value="Visible" />
+                        <Setter Target="FriendsButtonLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="PersonaPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="WordmarkPanel.Margin" Value="12,0,12,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- ============================================================ Title bar + top nav -->
+        <Grid x:Name="AppTitleBar" Grid.Row="0" Background="{StaticResource TitleBarTintBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftInsetColumn" Width="0" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition x:Name="RightInsetColumn" Width="138" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.ColumnSpan="6" VerticalAlignment="Bottom" Height="1" Background="{StaticResource DividerBrush}" IsHitTestVisible="False" />
+
+            <Button x:Name="BackButton"
+                    Grid.Column="1"
+                    Margin="6,0,0,0"
+                    Width="40"
+                    Height="36"
+                    Padding="0"
+                    Style="{StaticResource QuietButtonStyle}"
+                    Visibility="Collapsed"
+                    Click="OnBackClick"
+                    ToolTipService.ToolTip="Back (Esc)"
+                    AutomationProperties.Name="Back">
+                <FontIcon Glyph="&#xE72B;" FontSize="14" />
+            </Button>
+
+            <StackPanel x:Name="WordmarkPanel"
+                        Grid.Column="2"
+                        Margin="18,0,22,0"
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        VerticalAlignment="Center"
+                        IsHitTestVisible="False">
+                <FontIcon Glyph="&#xE7FC;" FontSize="17" Foreground="{StaticResource AccentBrush}" />
+                <TextBlock x:Name="WordmarkText" Text="STEAM" Style="{StaticResource WordmarkTextStyle}" />
+            </StackPanel>
+
+            <!-- NavigationView (Top) used purely as the tab strip; each tab's content lives in its own Frame below. -->
+            <NavigationView x:Name="TopNav"
+                            Grid.Column="3"
+                            PaneDisplayMode="Top"
+                            IsBackButtonVisible="Collapsed"
+                            IsSettingsVisible="False"
+                            IsTitleBarAutoPaddingEnabled="False"
+                            AlwaysShowHeader="False"
+                            SelectionFollowsFocus="Disabled"
+                            VerticalAlignment="Stretch"
+                            SelectionChanged="OnTopNavSelectionChanged"
+                            ItemInvoked="OnTopNavItemInvoked">
+                <NavigationView.Resources>
+                    <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#FF1A9FFF" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemForeground" Color="#FF8F98A0" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemForegroundPointerOver" Color="#FFC7D5E0" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemForegroundPressed" Color="#FFC7D5E0" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemForegroundSelected" Color="#FFFFFFFF" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemForegroundSelectedPointerOver" Color="#FFFFFFFF" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemForegroundSelectedPressed" Color="#FFFFFFFF" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemBackgroundPointerOver" Color="#0FFFFFFF" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemBackgroundPressed" Color="#08FFFFFF" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemBackgroundSelected" Color="Transparent" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemBackgroundSelectedPointerOver" Color="#0FFFFFFF" />
+                    <SolidColorBrush x:Key="TopNavigationViewItemBackgroundSelectedPressed" Color="#08FFFFFF" />
+                    <Thickness x:Key="TopNavigationViewItemContentOnlyContentPresenterMargin">14,0,14,0</Thickness>
+                    <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
+                    <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0</Thickness>
+                    <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
+                    <Thickness x:Key="TopNavigationViewTopNavGridMargin">0</Thickness>
+                </NavigationView.Resources>
+
+                <NavigationView.PaneHeader>
+                    <Border x:Name="LbGlyph"
+                            Margin="0,0,6,0"
+                            Padding="7,1,7,2"
+                            VerticalAlignment="Center"
+                            CornerRadius="4"
+                            Background="#26FFFFFF"
+                            Visibility="Collapsed">
+                        <TextBlock Text="LB" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextBodyBrush}" />
+                    </Border>
+                </NavigationView.PaneHeader>
+
+                <NavigationView.MenuItems>
+                    <NavigationViewItem x:Name="StoreNavItem" Tag="store" AutomationProperties.Name="Store">
+                        <TextBlock Text="STORE" Style="{StaticResource TabLabelTextStyle}" />
+                    </NavigationViewItem>
+                    <NavigationViewItem x:Name="LibraryNavItem" Tag="library" AutomationProperties.Name="Library">
+                        <TextBlock Text="LIBRARY" Style="{StaticResource TabLabelTextStyle}" />
+                    </NavigationViewItem>
+                    <NavigationViewItem x:Name="CommunityNavItem" Tag="community" AutomationProperties.Name="Community">
+                        <TextBlock Text="COMMUNITY" Style="{StaticResource TabLabelTextStyle}" />
+                    </NavigationViewItem>
+                    <NavigationViewItem x:Name="ProfileNavItem" Tag="profile" AutomationProperties.Name="Profile">
+                        <TextBlock Text="{x:Bind PersonaUpper}" Style="{StaticResource TabLabelTextStyle}" />
+                    </NavigationViewItem>
+                </NavigationView.MenuItems>
+
+                <NavigationView.PaneCustomContent>
+                    <Border x:Name="RbGlyph"
+                            Margin="6,0,0,0"
+                            Padding="7,1,7,2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            CornerRadius="4"
+                            Background="#26FFFFFF"
+                            Visibility="Collapsed">
+                        <TextBlock Text="RB" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextBodyBrush}" />
+                    </Border>
+                </NavigationView.PaneCustomContent>
+            </NavigationView>
+
+            <StackPanel x:Name="RightCluster"
+                        Grid.Column="4"
+                        Margin="0,0,6,0"
+                        Orientation="Horizontal"
+                        Spacing="2"
+                        VerticalAlignment="Center">
+                <Button x:Name="SearchButton"
+                        Style="{StaticResource QuietButtonStyle}"
+                        Click="OnSearchClick"
+                        ToolTipService.ToolTip="Search (Ctrl+F)"
+                        AutomationProperties.Name="Search">
+                    <FontIcon Glyph="&#xE721;" FontSize="15" />
+                </Button>
+                <Button x:Name="FriendsButton"
+                        Style="{StaticResource QuietButtonStyle}"
+                        Click="OnFriendsClick"
+                        ToolTipService.ToolTip="Friends"
+                        AutomationProperties.Name="Friends">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE716;" FontSize="15" />
+                        <TextBlock x:Name="FriendsButtonLabel" Text="{x:Bind FriendsOnlineLabel}" FontSize="13" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="AvatarButton"
+                        Padding="6,0,10,0"
+                        Style="{StaticResource QuietButtonStyle}"
+                        Click="OnAvatarClick"
+                        ToolTipService.ToolTip="View profile"
+                        AutomationProperties.Name="Profile">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Border Width="32" Height="32" CornerRadius="4" BorderThickness="2" BorderBrush="{StaticResource StatusOnlineBrush}">
+                            <controls:ArtImage Url="{x:Bind AvatarUrl}" CornerRadius="2" DecodeWidth="64" />
+                        </Border>
+                        <StackPanel x:Name="PersonaPanel" VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind PersonaName}" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource StatusOnlineBrush}" />
+                            <TextBlock Text="Online" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- ============================================================ One Frame (navigation stack) per tab -->
+        <Grid x:Name="ContentHost" Grid.Row="1">
+            <Frame x:Name="StoreFrame" IsTabStop="False" />
+            <Frame x:Name="LibraryFrame" IsTabStop="False" Visibility="Collapsed" />
+            <Frame x:Name="CommunityFrame" IsTabStop="False" Visibility="Collapsed" />
+            <Frame x:Name="ProfileFrame" IsTabStop="False" Visibility="Collapsed" />
+            <Border x:Name="ErrorPanel" Visibility="Collapsed" Background="{StaticResource StoreBackgroundBrush}" Padding="48">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="720" Spacing="12">
+                    <TextBlock Text="Something went wrong" Style="{StaticResource PageTitleTextStyle}" />
+                    <TextBlock x:Name="ErrorText" Style="{StaticResource BodyTextStyle}" IsTextSelectionEnabled="True" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ============================================================ Big Picture-style button hints (gamepad only) -->
+        <Border x:Name="HintsBar"
+                Grid.Row="2"
+                Height="52"
+                Background="{StaticResource ChromeTranslucentBrush}"
+                BorderBrush="{StaticResource DividerBrush}"
+                BorderThickness="0,1,0,0"
+                Visibility="Collapsed">
+            <Grid Padding="24,0,24,0">
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE7FC;" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}" />
+                    <TextBlock x:Name="ControllerLabel" Text="Controller" FontSize="13" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="28" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Grid Width="26" Height="26">
+                            <Ellipse Fill="#FF5DC21E" />
+                            <TextBlock Text="A" FontSize="13" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Text="Select" FontSize="14" Foreground="{StaticResource TextTitleBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Grid Width="26" Height="26">
+                            <Ellipse Fill="#FFE3352B" />
+                            <TextBlock Text="B" FontSize="13" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Text="Back" FontSize="14" Foreground="{StaticResource TextTitleBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel x:Name="XHint" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
+                        <Grid Width="26" Height="26">
+                            <Ellipse Fill="#FF1E74E3" />
+                            <TextBlock Text="X" FontSize="13" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock x:Name="XHintLabel" Text="Favorite" FontSize="14" Foreground="{StaticResource TextTitleBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Grid Width="26" Height="26">
+                            <Ellipse Fill="#FFFFB900" />
+                            <TextBlock Text="Y" FontSize="13" FontWeight="Bold" Foreground="#FF171A21" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Text="Search" FontSize="14" Foreground="{StaticResource TextTitleBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel x:Name="TriggerHint" Orientation="Horizontal" Spacing="6" Visibility="Collapsed">
+                        <Border Padding="7,2,7,3" CornerRadius="4" Background="#33FFFFFF" VerticalAlignment="Center">
+                            <TextBlock Text="LT" FontSize="11" FontWeight="Bold" Foreground="White" />
+                        </Border>
+                        <Border Padding="7,2,7,3" CornerRadius="4" Background="#33FFFFFF" VerticalAlignment="Center">
+                            <TextBlock Text="RT" FontSize="11" FontWeight="Bold" Foreground="White" />
+                        </Border>
+                        <TextBlock x:Name="TriggerHintLabel" Text="Collection" Margin="2,0,0,0" FontSize="14" Foreground="{StaticResource TextTitleBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Padding="7,2,7,3" CornerRadius="4" Background="#33FFFFFF" VerticalAlignment="Center">
+                            <TextBlock Text="LB" FontSize="11" FontWeight="Bold" Foreground="White" />
+                        </Border>
+                        <Border Padding="7,2,7,3" CornerRadius="4" Background="#33FFFFFF" VerticalAlignment="Center">
+                            <TextBlock Text="RB" FontSize="11" FontWeight="Bold" Foreground="White" />
+                        </Border>
+                        <TextBlock Text="Switch tab" Margin="2,0,0,0" FontSize="14" Foreground="{StaticResource TextTitleBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ============================================================ Compact bottom tab bar -->
+        <Grid x:Name="BottomTabs"
+              Grid.Row="3"
+              Height="64"
+              Background="{StaticResource ChromeBrush}"
+              BorderBrush="{StaticResource DividerBrush}"
+              BorderThickness="0,1,0,0"
+              Visibility="Collapsed"
+              XYFocusKeyboardNavigation="Enabled">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="StoreTabButton" Grid.Column="0" Tag="0" Style="{StaticResource QuietButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4" Click="OnBottomTabClick" AutomationProperties.Name="Store">
+                <StackPanel Spacing="4">
+                    <FontIcon Glyph="&#xE719;" FontSize="20" />
+                    <TextBlock Text="STORE" FontSize="11" FontWeight="SemiBold" CharacterSpacing="80" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="LibraryTabButton" Grid.Column="1" Tag="1" Style="{StaticResource QuietButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4" Click="OnBottomTabClick" AutomationProperties.Name="Library">
+                <StackPanel Spacing="4">
+                    <FontIcon Glyph="&#xE8F1;" FontSize="20" />
+                    <TextBlock Text="LIBRARY" FontSize="11" FontWeight="SemiBold" CharacterSpacing="80" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="CommunityTabButton" Grid.Column="2" Tag="2" Style="{StaticResource QuietButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4" Click="OnBottomTabClick" AutomationProperties.Name="Community">
+                <StackPanel Spacing="4">
+                    <FontIcon Glyph="&#xE716;" FontSize="20" />
+                    <TextBlock Text="COMMUNITY" FontSize="11" FontWeight="SemiBold" CharacterSpacing="80" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="ProfileTabButton" Grid.Column="3" Tag="3" Style="{StaticResource QuietButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4" Click="OnBottomTabClick" AutomationProperties.Name="Profile">
+                <StackPanel Spacing="4">
+                    <Border Width="22" Height="22" CornerRadius="4" BorderThickness="1.5" BorderBrush="{StaticResource StatusOnlineBrush}" HorizontalAlignment="Center">
+                        <controls:ArtImage Url="{x:Bind AvatarUrl}" CornerRadius="3" DecodeWidth="48" />
+                    </Border>
+                    <TextBlock Text="{x:Bind PersonaUpper}" FontSize="11" FontWeight="SemiBold" CharacterSpacing="80" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

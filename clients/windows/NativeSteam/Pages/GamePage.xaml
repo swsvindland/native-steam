@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NativeSteam.Pages.GamePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:NativeSteam.Controls"
+    xmlns:vm="using:NativeSteam.ViewModels"
+    Foreground="{StaticResource TextBodyBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Key="AchievementTemplate" x:DataType="vm:AchievementVM">
+            <Grid Width="64" Height="64" ToolTipService.ToolTip="{x:Bind Name}">
+                <controls:ArtImage Url="{x:Bind Icon}" PlaceholderText="" CornerRadius="4" DecodeWidth="128" Opacity="{x:Bind IconOpacity}" />
+                <Border Margin="0,0,3,3" Padding="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" CornerRadius="3" Background="#CC000000" Visibility="{x:Bind LockVisibility}">
+                    <FontIcon Glyph="&#xE72E;" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" />
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FriendRowTemplate" x:DataType="vm:FriendVM">
+            <controls:CardButton HorizontalAlignment="Stretch" Padding="8,6,8,6" Style="{StaticResource FlatRowButtonStyle}" AutomationProperties.Name="{x:Bind Name}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Width="40" Height="40" CornerRadius="4" BorderThickness="2" BorderBrush="{x:Bind StatusBrush}">
+                        <controls:ArtImage Url="{x:Bind Avatar}" CornerRadius="2" DecodeWidth="80" Opacity="{x:Bind AvatarOpacity}" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                        <TextBlock Text="{x:Bind Name}" FontSize="14" FontWeight="SemiBold" Foreground="{x:Bind NameBrush}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{x:Bind StatusLabel}" Style="{StaticResource MetaTextStyle}" />
+                    </StackPanel>
+                </Grid>
+            </controls:CardButton>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ScreenshotTemplate" x:DataType="vm:ScreenshotVM">
+            <controls:CardButton Width="320" Height="180" Style="{StaticResource CardButtonStyle}" AutomationProperties.Name="Screenshot">
+                <controls:ArtImage Url="{x:Bind Thumbnail}" CornerRadius="6" DecodeWidth="600" />
+            </controls:CardButton>
+        </DataTemplate>
+
+        <DataTemplate x:Key="GenreChipTemplate" x:DataType="vm:TextChipVM">
+            <Border Padding="10,3,10,4" CornerRadius="11" Background="#1FFFFFFF">
+                <TextBlock Text="{x:Bind Text}" FontSize="12" Foreground="{StaticResource TextBodyBrush}" />
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{StaticResource LibraryBackgroundBrush}">
+        <ScrollViewer x:Name="PageScroller" Style="{StaticResource PageScrollViewerStyle}">
+            <StackPanel XYFocusKeyboardNavigation="Enabled">
+
+                <!-- Hero with logo overlay, fading into bgLibrary -->
+                <Grid x:Name="HeroArea" Height="400">
+                    <controls:ArtImage Url="{x:Bind Game.Hero}" PlaceholderText="{x:Bind Game.Name}" DecodeWidth="1920" />
+                    <Border Background="{StaticResource LibraryHeroFadeBrush}" />
+                    <controls:ArtImage x:Name="LogoImage"
+                                       Height="150"
+                                       Margin="40,0,40,44"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Bottom"
+                                       Url="{x:Bind Game.Logo}"
+                                       Stretch="Uniform"
+                                       ImageAlignmentX="Left"
+                                       ImageAlignmentY="Bottom"
+                                       ShowPlaceholder="False"
+                                       DecodeWidth="800"
+                                       Visibility="{x:Bind Game.LogoVisibility}" />
+                    <TextBlock Margin="40,0,40,48"
+                               VerticalAlignment="Bottom"
+                               Text="{x:Bind Game.Name}"
+                               Style="{StaticResource PageTitleTextStyle}"
+                               FontSize="44"
+                               Visibility="{x:Bind Game.TitleFallbackVisibility}" />
+                </Grid>
+
+                <!-- Action row: PLAY / INSTALL, stats, secondary actions -->
+                <Grid x:Name="ActionBar" Padding="40,14,40,14" ColumnSpacing="28" Background="#99171A21">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="PrimaryActions" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <Button x:Name="PlayButton"
+                                MinWidth="180"
+                                MinHeight="56"
+                                Style="{StaticResource GradientButtonStyle}"
+                                Background="{StaticResource PlayButtonBrush}"
+                                Visibility="{x:Bind Game.PlayVisibility}"
+                                Click="OnPlayClick"
+                                AutomationProperties.Name="Play">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <FontIcon Glyph="&#xE768;" FontSize="18" />
+                                <TextBlock x:Name="PlayLabel" Text="PLAY" FontSize="18" FontWeight="SemiBold" CharacterSpacing="80" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="InstallButton"
+                                MinWidth="200"
+                                MinHeight="56"
+                                Style="{StaticResource GradientButtonStyle}"
+                                Background="{StaticResource InstallButtonBrush}"
+                                Visibility="{x:Bind Game.InstallVisibility}"
+                                Click="OnInstallClick"
+                                AutomationProperties.Name="Install">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <FontIcon Glyph="&#xE896;" FontSize="18" />
+                                <StackPanel>
+                                    <TextBlock x:Name="InstallLabel" Text="INSTALL" FontSize="17" FontWeight="SemiBold" CharacterSpacing="80" />
+                                    <TextBlock Text="{x:Bind Game.SizeLabel}" FontSize="11" Opacity="0.85" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Stats -->
+                    <StackPanel x:Name="StatsPanel" Grid.Column="1" Orientation="Horizontal" Spacing="32" VerticalAlignment="Center">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="LAST PLAYED" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBlock Text="{x:Bind Game.LastPlayedLabel}" FontSize="15" Foreground="{StaticResource TextTitleBrush}" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="PLAY TIME" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBlock Text="{x:Bind Game.PlaytimeLabel}" FontSize="15" Foreground="{StaticResource TextTitleBrush}" />
+                        </StackPanel>
+                        <StackPanel Spacing="4" MinWidth="150" Visibility="{x:Bind Game.AchievementsVisibility}">
+                            <TextBlock Text="ACHIEVEMENTS" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBlock Text="{x:Bind Game.AchievementsLabel}" FontSize="15" Foreground="{StaticResource TextTitleBrush}" />
+                            <ProgressBar Style="{StaticResource SteamProgressBarStyle}" Value="{x:Bind Game.AchievementsPercent}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel x:Name="SecondaryActions" Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Button x:Name="FavoriteButton" Style="{StaticResource OutlineIconButtonStyle}" Click="OnFavoriteClick" ToolTipService.ToolTip="Favorite" AutomationProperties.Name="Favorite">
+                            <FontIcon x:Name="FavoriteIcon" Glyph="{x:Bind Game.FavoriteGlyph}" Foreground="{x:Bind Game.FavoriteBrush}" FontSize="16" />
+                        </Button>
+                        <Button Style="{StaticResource OutlineIconButtonStyle}" ToolTipService.ToolTip="Properties" AutomationProperties.Name="Properties">
+                            <FontIcon Glyph="&#xE713;" FontSize="16" />
+                        </Button>
+                        <Button Style="{StaticResource OutlineIconButtonStyle}" ToolTipService.ToolTip="Game info" AutomationProperties.Name="Game info" Click="OnInfoClick">
+                            <FontIcon Glyph="&#xE946;" FontSize="16" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Sections -->
+                <Grid x:Name="SectionsGrid" MaxWidth="1600" Padding="40,28,40,48" ColumnSpacing="40" RowSpacing="28">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition x:Name="SideColumn" Width="340" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="MainSections" Spacing="32">
+                        <!-- ACHIEVEMENTS -->
+                        <StackPanel Spacing="12">
+                            <controls:SectionHeader Title="Achievements" Trailing="{x:Bind Game.AchievementsLabel}" />
+                            <TextBlock Text="{x:Bind Game.AchievementsSummary}" Style="{StaticResource MetaTextStyle}" Visibility="{x:Bind Game.AchievementsVisibility}" />
+                            <ProgressBar Style="{StaticResource SteamProgressBarStyle}" Value="{x:Bind Game.AchievementsPercent}" Visibility="{x:Bind Game.AchievementsVisibility}" />
+                            <ItemsRepeater ItemsSource="{x:Bind Game.Achievements}" ItemTemplate="{StaticResource AchievementTemplate}" Visibility="{x:Bind Game.AchievementsVisibility}">
+                                <ItemsRepeater.Layout>
+                                    <UniformGridLayout MinItemWidth="64" MinItemHeight="64" MinColumnSpacing="10" MinRowSpacing="10" />
+                                </ItemsRepeater.Layout>
+                            </ItemsRepeater>
+                            <TextBlock Text="This game has no Steam achievements." Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource TextSecondaryBrush}" Visibility="{x:Bind Game.NoAchievementsVisibility}" />
+                        </StackPanel>
+
+                        <!-- SCREENSHOTS -->
+                        <StackPanel Spacing="12" Visibility="{x:Bind Game.ScreenshotsVisibility}">
+                            <controls:SectionHeader Title="Screenshots" />
+                            <ItemsControl ItemsSource="{x:Bind Game.Screenshots}" ItemTemplate="{StaticResource ScreenshotTemplate}" Style="{StaticResource ShelfStyle}" />
+                        </StackPanel>
+
+                        <!-- ABOUT -->
+                        <StackPanel x:Name="AboutSection" Spacing="12">
+                            <controls:SectionHeader Title="About" />
+                            <TextBlock Text="{x:Bind Game.Description}" Style="{StaticResource BodyTextStyle}" MaxWidth="820" HorizontalAlignment="Left" />
+                            <ItemsControl ItemsSource="{x:Bind Game.Genres}" ItemTemplate="{StaticResource GenreChipTemplate}" Style="{StaticResource InlineChipsStyle}" />
+                            <Grid ColumnSpacing="16" RowSpacing="8" Margin="0,6,0,0" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="DEVELOPER" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{x:Bind Game.Developer}" FontSize="13" Foreground="{StaticResource AccentLinkBrush}" />
+                                <TextBlock Grid.Row="1" Text="RELEASE DATE" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind Game.ReleaseDate}" FontSize="13" />
+                                <TextBlock Grid.Row="2" Text="CONTROLLER" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center" />
+                                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                                    <FontIcon Glyph="&#xE7FC;" FontSize="14" Foreground="{StaticResource AccentLinkBrush}" Visibility="{x:Bind Game.ControllerVisibility}" />
+                                    <TextBlock Text="{x:Bind Game.ControllerLabel}" FontSize="13" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Side column: FRIENDS WHO PLAY -->
+                    <StackPanel x:Name="SideSections" Grid.Column="1" Spacing="12">
+                        <controls:SectionHeader Title="Friends who play" />
+                        <TextBlock Text="{x:Bind Game.FriendsTitle}" Style="{StaticResource MetaTextStyle}" Visibility="{x:Bind Game.FriendsVisibility}" />
+                        <ItemsControl ItemsSource="{x:Bind Game.Friends}" ItemTemplate="{StaticResource FriendRowTemplate}" Style="{StaticResource StackListStyle}" />
+                        <TextBlock Text="None of your friends own this game yet." Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource TextSecondaryBrush}" Visibility="{x:Bind Game.NoFriendsVisibility}" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

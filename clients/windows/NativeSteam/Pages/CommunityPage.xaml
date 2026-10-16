@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NativeSteam.Pages.CommunityPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:NativeSteam.Controls"
+    xmlns:vm="using:NativeSteam.ViewModels"
+    NavigationCacheMode="Required"
+    Foreground="{StaticResource TextBodyBrush}">
+
+    <Page.Resources>
+
+        <!-- FRIEND ACTIVITY card: header, kind-specific body, likes/comments footer. -->
+        <DataTemplate x:Key="ActivityTemplate" x:DataType="vm:ActivityVM">
+            <controls:CardButton HorizontalAlignment="Stretch" Padding="16,14,16,12" Click="OnActivityClick" Style="{StaticResource CardButtonStyle}" AutomationProperties.Name="{x:Bind AppName}">
+                <StackPanel Spacing="12">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="40" Height="40" CornerRadius="4" BorderThickness="2" BorderBrush="{x:Bind StatusBrush}">
+                            <controls:ArtImage Url="{x:Bind FriendAvatar}" CornerRadius="2" DecodeWidth="80" />
+                        </Border>
+                        <TextBlock Grid.Column="1" FontSize="14" TextWrapping="WrapWholeWords" VerticalAlignment="Center">
+                            <Run Text="{x:Bind FriendName}" Foreground="{x:Bind NameBrush}" FontWeight="SemiBold" />
+                            <Run Text="{x:Bind Headline}" Foreground="{StaticResource TextSecondaryBrush}" />
+                            <Run Text="{x:Bind AppName}" Foreground="{StaticResource AccentLinkBrush}" FontWeight="SemiBold" />
+                        </TextBlock>
+                        <TextBlock Grid.Column="2" Text="{x:Bind TimeLabel}" Style="{StaticResource MetaTextStyle}" VerticalAlignment="Top" Margin="0,2,0,0" />
+                    </Grid>
+
+                    <!-- achievement -->
+                    <Grid Padding="12" CornerRadius="4" ColumnSpacing="14" Background="#0DFFFFFF" Visibility="{x:Bind AchievementVisibility}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <controls:ArtImage Width="64" Height="64" Url="{x:Bind AchievementIcon}" CornerRadius="4" DecodeWidth="128" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="3">
+                            <TextBlock Text="{x:Bind AchievementName}" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextTitleBrush}" TextWrapping="WrapWholeWords" />
+                            <TextBlock Text="{x:Bind AchievementDetail}" Style="{StaticResource MetaTextStyle}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- screenshot -->
+                    <controls:ArtImage AspectRatio="1.7778" Url="{x:Bind ScreenshotUrl}" CornerRadius="4" DecodeWidth="960" Visibility="{x:Bind ScreenshotVisibility}" />
+
+                    <!-- review -->
+                    <StackPanel Spacing="10" Visibility="{x:Bind ReviewVisibility}">
+                        <Grid Padding="12,8,12,8" CornerRadius="4" ColumnSpacing="12" Background="{x:Bind ReviewPlateBrush}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="{x:Bind ReviewGlyph}" FontSize="24" Foreground="{x:Bind ReviewBrush}" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="{x:Bind ReviewVerdict}" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextTitleBrush}" />
+                                <TextBlock Text="{x:Bind ReviewHours}" Style="{StaticResource MetaTextStyle}" />
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Text="{x:Bind ReviewBody}" Style="{StaticResource BodyTextStyle}" FontStyle="Italic" />
+                    </StackPanel>
+
+                    <!-- now playing / new game -->
+                    <Grid ColumnSpacing="14" Visibility="{x:Bind GameVisibility}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <controls:ArtImage Width="230" Height="107" Url="{x:Bind GameImage}" PlaceholderText="{x:Bind AppName}" CornerRadius="4" DecodeWidth="460" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="{x:Bind GameCaption}" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBlock Text="{x:Bind AppName}" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextTitleBrush}" TextWrapping="WrapWholeWords" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Spacing="18">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon Glyph="&#xE8E1;" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind Likes}" Style="{StaticResource MetaTextStyle}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon Glyph="&#xE90A;" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind Comments}" Style="{StaticResource MetaTextStyle}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </controls:CardButton>
+        </DataTemplate>
+
+        <!-- NEWS card -->
+        <DataTemplate x:Key="NewsTemplate" x:DataType="vm:NewsVM">
+            <controls:CardButton HorizontalAlignment="Stretch" Click="OnNewsClick" Style="{StaticResource CardButtonStyle}" AutomationProperties.Name="{x:Bind Title}">
+                <StackPanel>
+                    <controls:ArtImage AspectRatio="2.14" Url="{x:Bind Image}" PlaceholderText="{x:Bind AppName}" CornerRadius="6,6,0,0" DecodeWidth="640" />
+                    <StackPanel Padding="14,12,14,14" Spacing="6">
+                        <TextBlock Text="{x:Bind Meta}" Style="{StaticResource MetaTextStyle}" />
+                        <TextBlock Text="{x:Bind Title}" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextTitleBrush}" TextWrapping="WrapWholeWords" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{x:Bind Excerpt}" FontSize="13" LineHeight="19" Foreground="{StaticResource TextBodyBrush}" TextWrapping="WrapWholeWords" MaxLines="3" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </StackPanel>
+            </controls:CardButton>
+        </DataTemplate>
+
+        <!-- POPULAR HUBS row -->
+        <DataTemplate x:Key="HubTemplate" x:DataType="vm:HubVM">
+            <controls:CardButton HorizontalAlignment="Stretch" Padding="8" Click="OnHubClick" Style="{StaticResource FlatRowButtonStyle}" AutomationProperties.Name="{x:Bind Name}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind Rank}" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <controls:ArtImage Grid.Column="1" Width="108" Height="50" Url="{x:Bind Header}" PlaceholderText="{x:Bind Name}" CornerRadius="3" DecodeWidth="216" />
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="3">
+                        <TextBlock Text="{x:Bind Name}" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextTitleBrush}" TextTrimming="CharacterEllipsis" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Ellipse Width="7" Height="7" Fill="{StaticResource StatusInGameBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="{x:Bind PlayersLabel}" FontSize="12" Foreground="{StaticResource StatusInGameBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </controls:CardButton>
+        </DataTemplate>
+
+        <!-- FRIENDS row -->
+        <DataTemplate x:Key="FriendRowTemplate" x:DataType="vm:FriendVM">
+            <controls:CardButton HorizontalAlignment="Stretch" Padding="8,6,8,6" Click="OnFriendClick" Style="{StaticResource FlatRowButtonStyle}" AutomationProperties.Name="{x:Bind Name}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Width="36" Height="36" CornerRadius="4" BorderThickness="2" BorderBrush="{x:Bind StatusBrush}">
+                        <controls:ArtImage Url="{x:Bind Avatar}" CornerRadius="2" DecodeWidth="72" Opacity="{x:Bind AvatarOpacity}" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                        <TextBlock Text="{x:Bind Name}" FontSize="13" FontWeight="SemiBold" Foreground="{x:Bind NameBrush}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{x:Bind StatusLabel}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <Grid Grid.Column="2" Width="26" Height="26" VerticalAlignment="Center">
+                        <Ellipse Stroke="{x:Bind LevelBrush}" StrokeThickness="2" />
+                        <TextBlock Text="{x:Bind LevelLabel}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextBodyBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                </Grid>
+            </controls:CardButton>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FriendGroupTemplate" x:DataType="vm:FriendGroupVM">
+            <StackPanel Margin="0,0,0,10" Spacing="6" Visibility="{x:Bind Visibility}">
+                <TextBlock Margin="8,0,0,0" Text="{x:Bind Title}" Style="{StaticResource CaptionTextStyle}" />
+                <ItemsControl ItemsSource="{x:Bind Friends}" ItemTemplate="{StaticResource FriendRowTemplate}" Style="{StaticResource StackListStyle}" />
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{StaticResource StoreBackgroundBrush}">
+        <ScrollViewer x:Name="PageScroller" Style="{StaticResource PageScrollViewerStyle}">
+            <Grid x:Name="LayoutGrid" MaxWidth="1600" Padding="32,20,32,40" ColumnSpacing="28" XYFocusKeyboardNavigation="Enabled">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="MainColumn" Width="*" />
+                    <ColumnDefinition x:Name="NewsColumn" Width="380" />
+                    <ColumnDefinition x:Name="RailColumn" Width="320" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Compact segmented control: Activity | News | Hubs -->
+                <StackPanel x:Name="SectionSwitcher" Grid.ColumnSpan="3" Margin="0,0,0,16" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
+                    <Button x:Name="ActivityTabButton" Tag="0" Content="Activity" Style="{StaticResource ChipButtonStyle}" Click="OnSectionTabClick" />
+                    <Button x:Name="NewsTabButton" Tag="1" Content="News" Style="{StaticResource ChipButtonStyle}" Click="OnSectionTabClick" />
+                    <Button x:Name="HubsTabButton" Tag="2" Content="Hubs" Style="{StaticResource ChipButtonStyle}" Click="OnSectionTabClick" />
+                </StackPanel>
+
+                <StackPanel x:Name="ActivitySection" Grid.Row="1" Spacing="12">
+                    <controls:SectionHeader Title="Friend Activity" Trailing="Filter ›" />
+                    <ItemsRepeater x:Name="ActivityRepeater" ItemsSource="{x:Bind Activity}" ItemTemplate="{StaticResource ActivityTemplate}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" Spacing="12" />
+                        </ItemsRepeater.Layout>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <StackPanel x:Name="NewsSection" Grid.Row="1" Grid.Column="1" Spacing="12">
+                    <controls:SectionHeader Title="News" Trailing="All news ›" />
+                    <ItemsRepeater ItemsSource="{x:Bind News}" ItemTemplate="{StaticResource NewsTemplate}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" Spacing="12" />
+                        </ItemsRepeater.Layout>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <StackPanel x:Name="RailSection" Grid.Row="1" Grid.Column="2" Spacing="28">
+                    <StackPanel Spacing="10">
+                        <controls:SectionHeader Title="Popular Hubs" />
+                        <ItemsControl ItemsSource="{x:Bind Hubs}" ItemTemplate="{StaticResource HubTemplate}" Style="{StaticResource StackListStyle}" />
+                    </StackPanel>
+                    <StackPanel x:Name="FriendsSection" Spacing="10">
+                        <controls:SectionHeader Title="Friends" Trailing="{x:Bind FriendsOnline}" />
+                        <ItemsControl ItemsSource="{x:Bind FriendGroups}" ItemTemplate="{StaticResource FriendGroupTemplate}" IsTabStop="False" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

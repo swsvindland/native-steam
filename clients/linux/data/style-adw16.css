@@ -1,0 +1,24 @@
+/* libadwaita >= 1.6: named colours are CSS variables. Loaded only on >= 1.6. */
+:root {
+  --accent-color: #66c0f4;
+  --accent-bg-color: #1a9fff;
+  --accent-fg-color: #ffffff;
+  --window-bg-color: #171a21;
+  --window-fg-color: #c7d5e0;
+  --view-bg-color: #16202d;
+  --view-fg-color: #c7d5e0;
+  --headerbar-bg-color: #171a21;
+  --headerbar-fg-color: #c7d5e0;
+  --headerbar-backdrop-color: #171a21;
+  --headerbar-border-color: rgba(255, 255, 255, 0.08);
+  --headerbar-shade-color: rgba(0, 0, 0, 0.5);
+  --card-bg-color: #16202d;
+  --card-fg-color: #c7d5e0;
+  --popover-bg-color: #23262e;
+  --popover-fg-color: #c7d5e0;
+  --dialog-bg-color: #1e2329;
+  --dialog-fg-color: #c7d5e0;
+  --sidebar-bg-color: #171a21;
+  --sidebar-fg-color: #c7d5e0;
+  --secondary-sidebar-bg-color: #171a21;
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/io/github/swsvindland/NativeSteam">
+    <file>style.css</file>
+    <file>style-adw15.css</file>
+    <file>style-adw16.css</file>
+    <file>icons/scalable/apps/io.github.swsvindland.NativeSteam.svg</file>
+    <file>icons/scalable/actions/ns-back-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-calendar-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-check-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-clock-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-comment-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-community-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-controller-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-deck-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-download-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-gear-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-info-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-layers-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-library-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-linux-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-mac-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-medal-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-menu-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-next-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-person-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-play-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-search-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-star-outline-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-star-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-store-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-tag-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-thumbs-down-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-thumbs-up-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-trophy-symbolic.svg</file>
+    <file>icons/scalable/actions/ns-windows-symbolic.svg</file>
+  </gresource>
+</gresources>

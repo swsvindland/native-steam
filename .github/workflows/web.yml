@@ -1,0 +1,74 @@
+name: web
+
+on:
+  push:
+    branches: [main]
+    paths: ["clients/web/**", "data/**", ".github/workflows/web.yml"]
+  pull_request:
+    paths: ["clients/web/**", "data/**", ".github/workflows/web.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: web-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+# Pages needs a public repo (on free plans), so the deploy steps switch on
+# automatically once the repository is made public.
+env:
+  PAGES: ${{ github.event_name != 'pull_request' && !github.event.repository.private }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: clients/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: clients/web/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: clients/web/pnpm-lock.yaml
+
+      - name: Configure Pages
+        id: pages
+        if: env.PAGES == 'true'
+        uses: actions/configure-pages@v5
+
+      - run: pnpm install --frozen-lockfile
+
+      # Type-checks and statically exports to clients/web/out.
+      - name: Build static export
+        run: pnpm build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - run: touch out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        if: env.PAGES == 'true'
+        with:
+          path: clients/web/out
+
+  deploy:
+    if: github.event_name != 'pull_request' && !github.event.repository.private && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

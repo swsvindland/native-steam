@@ -1,0 +1,8 @@
+# Build products
+build/
+DerivedData/
+Packages/SteamKit/.build/
+Packages/SteamKit/.swiftpm/
+*.xcuserstate
+xcuserdata/
+Scripts/.window-id

@@ -1,0 +1,21 @@
+/* libadwaita 1.5: named colours are @define-color. Loaded only on < 1.6. */
+@define-color accent_color #66c0f4;
+@define-color accent_bg_color #1a9fff;
+@define-color accent_fg_color #ffffff;
+@define-color window_bg_color #171a21;
+@define-color window_fg_color #c7d5e0;
+@define-color view_bg_color #16202d;
+@define-color view_fg_color #c7d5e0;
+@define-color headerbar_bg_color #171a21;
+@define-color headerbar_fg_color #c7d5e0;
+@define-color headerbar_backdrop_color #171a21;
+@define-color headerbar_border_color rgba(255, 255, 255, 0.08);
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.5);
+@define-color card_bg_color #16202d;
+@define-color card_fg_color #c7d5e0;
+@define-color popover_bg_color #23262e;
+@define-color popover_fg_color #c7d5e0;
+@define-color dialog_bg_color #1e2329;
+@define-color dialog_fg_color #c7d5e0;
+@define-color sidebar_bg_color #171a21;
+@define-color sidebar_fg_color #c7d5e0;

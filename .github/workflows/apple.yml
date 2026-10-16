@@ -1,0 +1,52 @@
+name: apple
+
+on:
+  push:
+    branches: [main]
+    paths: ["clients/apple/**", "data/snapshot.json", ".github/workflows/apple.yml"]
+  pull_request:
+    paths: ["clients/apple/**", "data/snapshot.json", ".github/workflows/apple.yml"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: clients/apple
+    steps:
+      - uses: actions/checkout@v4
+
+      # The apps target iOS 26 / macOS 26, so they need the newest Xcode on the runner.
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Test SteamKit (models, snapshot decoding, spatial focus)
+        working-directory: clients/apple/Packages/SteamKit
+        run: swift test
+
+      - name: Build macOS app
+        run: |
+          xcodebuild build \
+            -project NativeSteam.xcodeproj \
+            -scheme NativeSteam-macOS \
+            -configuration Debug \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Build iOS app (simulator)
+        run: |
+          xcodebuild build \
+            -project NativeSteam.xcodeproj \
+            -scheme NativeSteam-iOS \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO

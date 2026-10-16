@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    x:Class="NativeSteam.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedTheme="Dark">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <ResourceDictionary Source="ms-appx:///Themes/Steam.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Steam blue as the app accent for stock controls (progress, text box focus, toggles). -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <Color x:Key="SystemAccentColor">#FF1A9FFF</Color>
+                    <Color x:Key="SystemAccentColorLight1">#FF47B2FF</Color>
+                    <Color x:Key="SystemAccentColorLight2">#FF66C0F4</Color>
+                    <Color x:Key="SystemAccentColorLight3">#FF9AD6FF</Color>
+                    <Color x:Key="SystemAccentColorDark1">#FF1688DB</Color>
+                    <Color x:Key="SystemAccentColorDark2">#FF1270B5</Color>
+                    <Color x:Key="SystemAccentColorDark3">#FF0D5690</Color>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="SystemAccentColor">#FF1A9FFF</Color>
+                    <Color x:Key="SystemAccentColorLight1">#FF47B2FF</Color>
+                    <Color x:Key="SystemAccentColorLight2">#FF66C0F4</Color>
+                    <Color x:Key="SystemAccentColorLight3">#FF9AD6FF</Color>
+                    <Color x:Key="SystemAccentColorDark1">#FF1688DB</Color>
+                    <Color x:Key="SystemAccentColorDark2">#FF1270B5</Color>
+                    <Color x:Key="SystemAccentColorDark3">#FF0D5690</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,32 @@
+[package]
+name = "native-steam-gtk"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Native Steam: an unofficial concept Steam client for Linux, built with GTK 4 and libadwaita"
+repository = "https://github.com/swsvindland/native-steam"
+publish = false
+build = "build.rs"
+
+[[bin]]
+name = "native-steam"
+path = "src/main.rs"
+
+# Standalone workspace: this crate is not part of `core/`'s workspace.
+[workspace]
+
+[dependencies]
+steam-model = { path = "../../core/crates/steam-model" }
+# Target the GNOME 46 / Ubuntu 24.04 LTS baseline: GTK 4.14 + libadwaita 1.5.
+gtk = { package = "gtk4", version = "0.11", features = ["v4_14"] }
+adw = { package = "libadwaita", version = "0.9", features = ["v1_5"] }
+gilrs = "0.11"
+ureq = "3"
+async-channel = "2"
+
+[build-dependencies]
+glib-build-tools = "0.22"
+
+[profile.release]
+lto = "thin"
+codegen-units = 4

@@ -1,0 +1,584 @@
+/* ---- Banner ------------------------------------------------------------ */
+.profile-banner {
+  position: relative;
+  overflow: hidden;
+}
+.profile-banner__bg {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+}
+.profile-banner__bg .art {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+.profile-banner__bg img {
+  filter: brightness(0.5) saturate(1.1);
+}
+.profile-banner__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(30, 35, 41, 0.1) 0%, rgba(30, 35, 41, 0.5) 100%),
+    linear-gradient(90deg, rgba(14, 16, 20, 0.55) 0%, rgba(14, 16, 20, 0) 60%);
+}
+.profile-banner__inner {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 72px var(--gutter) 28px;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+}
+.profile-avatar {
+  display: block;
+  flex: none;
+  width: 168px;
+  height: 168px;
+  padding: 3px;
+  border-radius: var(--r-avatar);
+  background: var(--status-online);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+.profile-avatar .art {
+  height: 100%;
+  border-radius: 2px;
+}
+.profile-id {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 6px;
+}
+.profile-id__name {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-title);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+.profile-id__sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  color: var(--text-body);
+  font-size: 14px;
+}
+.profile-id__online {
+  margin-top: 10px;
+  color: var(--status-online);
+  font-size: 13px;
+  font-weight: 600;
+}
+.profile-level {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 240px;
+  padding: 14px 16px;
+  border-radius: var(--r-card);
+  background: rgba(14, 16, 20, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.profile-level__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profile-level__label {
+  font-size: 20px;
+  color: var(--text-title);
+}
+.profile-level__xp {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.profile-edit {
+  margin-top: 4px;
+}
+
+/* ---- Body -------------------------------------------------------------- */
+.profile-summary {
+  padding-top: 20px;
+  max-width: 820px;
+}
+.profile-summary__text {
+  color: var(--text-body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.profile-summary__since {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin-top: 22px;
+  border-radius: var(--r-card);
+  background: rgba(35, 38, 46, 0.65);
+  overflow: hidden;
+}
+.profile-stat {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 2px;
+  padding: 14px 6px;
+  text-align: center;
+}
+.profile-stat + .profile-stat {
+  box-shadow: inset 1px 0 0 var(--divider);
+}
+.profile-stat dd {
+  color: var(--text-title);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.profile-stat dt {
+  color: var(--text-secondary);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.profile-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 32px;
+}
+.profile-col {
+  min-width: 0;
+}
+
+/* ---- Badges ------------------------------------------------------------ */
+.badges {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px 8px;
+  border-radius: var(--r-card);
+  text-align: center;
+}
+html[data-input="mouse"] .badge:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.badge__medal {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: #fff;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(circle at 50% 60%, var(--badge), color-mix(in srgb, var(--badge) 55%, #000) 100%);
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.45);
+}
+.badge__medal svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+}
+.badge__level {
+  position: absolute;
+  right: -4px;
+  bottom: -2px;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #171a21;
+  border: 1.5px solid var(--badge);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 17px;
+}
+.badge__name {
+  margin-top: 4px;
+  color: var(--text-body);
+  font-size: 12px;
+  line-height: 1.25;
+}
+.badge__xp {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* ---- Favorite game ----------------------------------------------------- */
+.fav-game {
+  display: block;
+  overflow: hidden;
+  background: var(--surface-neutral);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+html[data-input="keyboard"] .fav-game:focus,
+html[data-input="gamepad"] .fav-game:focus {
+  transform: scale(1.02);
+}
+.fav-game__art {
+  position: relative;
+  display: block;
+  aspect-ratio: 1920 / 620;
+}
+.fav-game__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 55%);
+}
+.fav-game__logo {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 38%;
+  max-height: 70%;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.7));
+}
+.fav-game__title {
+  position: absolute;
+  left: 20px;
+  bottom: 16px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+}
+.fav-game__stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 16px;
+}
+.fav-game__stat {
+  color: var(--text-body);
+  font-size: 13px;
+}
+.fav-game__stat strong {
+  color: var(--text-title);
+  font-size: 15px;
+  font-weight: 600;
+}
+.fav-game__stat--ach {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+.fav-game__stat--ach span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- Recent activity rows ---------------------------------------------- */
+.recent-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.recent-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px;
+  overflow: hidden;
+  background: rgba(35, 38, 46, 0.65);
+}
+html[data-input="mouse"] .recent-row:hover {
+  background: var(--surface-hover);
+  transform: none;
+}
+html[data-input="keyboard"] .recent-row:focus,
+html[data-input="gamepad"] .recent-row:focus {
+  transform: scale(1.02);
+}
+.recent-row__art {
+  width: 184px;
+  flex: none;
+  border-radius: 3px;
+}
+.recent-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.recent-row__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.recent-row__name {
+  color: var(--text-title);
+  font-size: 16px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.recent-row__total {
+  flex: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.recent-row__sub {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+.recent-row__ach {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 6px;
+}
+.recent-row__ach-label {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.recent-row__ach-label strong {
+  color: var(--text-title);
+}
+
+/* ---- Rare achievements -------------------------------------------------- */
+.rare-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+.rare {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 4px;
+  text-align: center;
+}
+html[data-input="mouse"] .rare:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.rare__icon {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-btn);
+  box-shadow: 0 0 0 2px rgba(255, 210, 87, 0.55), 0 0 18px rgba(255, 210, 87, 0.25);
+}
+.rare__name {
+  color: var(--text-title);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.rare__game {
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
+/* ---- Screenshot showcase ------------------------------------------------ */
+.shot-showcase {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: repeat(3, auto);
+  gap: 8px;
+}
+.shot-showcase .shot {
+  aspect-ratio: 16 / 9;
+}
+.shot-showcase .shot--large {
+  grid-row: span 3;
+  aspect-ratio: auto;
+}
+.shot__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18px 10px 7px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.8));
+  color: var(--text-body);
+  font-size: 12px;
+  text-align: left;
+}
+html[data-input="keyboard"] .shot--large:focus,
+html[data-input="gamepad"] .shot--large:focus {
+  transform: scale(1.02);
+}
+
+/* ---- Friends preview ---------------------------------------------------- */
+.friends-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.friends-preview__avatars {
+  display: grid;
+  grid-template-columns: repeat(4, 44px);
+  justify-content: space-between;
+  gap: 10px;
+}
+.friends-preview__full {
+  margin-top: 4px;
+}
+.friends-preview__full .section-header {
+  display: none;
+}
+
+/* ---- Responsive -------------------------------------------------------- */
+@media (max-width: 999.98px) {
+  .profile-cols {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .profile-stats {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--divider);
+  }
+  .profile-stat {
+    grid-column: span 3;
+    background: #1d2026;
+    box-shadow: none !important;
+  }
+  .profile-stat:nth-child(n + 5) {
+    grid-column: span 4;
+  }
+  .rare-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .friends-preview__avatars {
+    grid-template-columns: repeat(8, 44px);
+    justify-content: start;
+  }
+}
+@media (max-width: 699.98px) {
+  .profile-banner__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    padding: calc(40px + env(safe-area-inset-top)) var(--gutter) 18px;
+  }
+  .profile-avatar {
+    width: 96px;
+    height: 96px;
+  }
+  .profile-id {
+    padding: 0;
+  }
+  .profile-id__name {
+    font-size: 28px;
+  }
+  .profile-id__sub {
+    justify-content: center;
+  }
+  .profile-id__online {
+    margin-top: 4px;
+  }
+  .profile-level {
+    width: 100%;
+    max-width: 360px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 6px 14px;
+    padding: 12px 14px;
+    text-align: left;
+  }
+  .profile-level__row {
+    grid-column: 1 / -1;
+  }
+  .profile-level__label {
+    font-size: 16px;
+  }
+  .profile-level .level-ring--lg {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+  }
+  .profile-level__xp {
+    grid-column: 1;
+  }
+  .profile-edit {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    margin: 0;
+  }
+  .profile-level .progress--xp {
+    grid-column: 1;
+  }
+  .profile-summary {
+    padding-top: 6px;
+    text-align: center;
+  }
+  .profile-summary__text {
+    font-size: 14px;
+  }
+  .profile-stats {
+    margin-top: 18px;
+  }
+  .profile-stat {
+    padding: 12px 2px;
+  }
+  .profile-stat dd {
+    font-size: 17px;
+  }
+  .profile-stat dt {
+    font-size: 9px;
+    letter-spacing: 0.05em;
+  }
+  .badges {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .recent-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .recent-row__art {
+    width: 100%;
+  }
+  .fav-game__stats {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .fav-game__stat--ach {
+    min-width: 0;
+  }
+  .fav-game__logo {
+    max-width: 48%;
+  }
+  .shot-showcase {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  .shot-showcase .shot--large {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    aspect-ratio: 16 / 9;
+  }
+  .friends-preview__avatars {
+    grid-template-columns: repeat(4, 44px);
+    justify-content: space-between;
+  }
+}

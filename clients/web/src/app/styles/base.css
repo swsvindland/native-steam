@@ -1,0 +1,177 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: #0e1620;
+  color: var(--text-body);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.45;
+  /* No background here: the html background paints the canvas, so the fixed
+     page gradients (z-index: -1) can show through. */
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+ol,
+ul,
+blockquote {
+  margin: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+::selection {
+  background: rgba(26, 159, 255, 0.45);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.muted {
+  color: var(--text-secondary);
+}
+
+.dot-sep {
+  color: var(--text-muted);
+  margin: 0 2px;
+}
+
+/* ---- Size classes ------------------------------------------------------ */
+@media (min-width: 700px) {
+  .compact-only {
+    display: none !important;
+  }
+}
+@media (max-width: 699.98px) {
+  .regular-only {
+    display: none !important;
+  }
+}
+
+/* ---- Input model: focus, hover, press ---------------------------------- */
+/* Focus ring + scale only for keyboard / gamepad (DESIGN.md §3). */
+:focus {
+  outline: none;
+}
+
+html[data-input="keyboard"] :focus,
+html[data-input="gamepad"] :focus {
+  outline: 2px solid #fff;
+  outline-offset: 0;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--r-btn);
+}
+
+html[data-input="keyboard"] input:focus,
+html[data-input="gamepad"] input:focus {
+  outline-offset: -2px;
+}
+
+.card {
+  position: relative;
+  border-radius: var(--r-card);
+  transition:
+    transform 120ms var(--ease-out),
+    background-color 120ms var(--ease-out),
+    box-shadow 120ms var(--ease-out),
+    filter 120ms var(--ease-out);
+}
+
+html[data-input="keyboard"] .card:focus,
+html[data-input="gamepad"] .card:focus {
+  transform: scale(1.04);
+  z-index: 3;
+  border-radius: var(--r-card);
+}
+
+html[data-input="keyboard"] .card:focus img,
+html[data-input="gamepad"] .card:focus img {
+  filter: brightness(1.12) saturate(1.05);
+}
+
+html[data-input="mouse"] .card:hover {
+  transform: translateY(-2px);
+  z-index: 2;
+}
+
+html[data-input="mouse"] .card:hover img {
+  filter: brightness(1.08);
+}
+
+html[data-input="touch"] .card:active {
+  transform: scale(0.98);
+  transition-duration: 60ms;
+}
+
+/* Touch targets ≥ 44 px */
+html[data-input="touch"] .btn,
+html[data-input="touch"] .chip,
+html[data-input="touch"] .segmented button {
+  min-height: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

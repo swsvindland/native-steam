@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = ["crates/steam-model", "crates/steam-api", "crates/steam-seed", "crates/steam-snapshot"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/swsvindland/native-steam"
+
+[workspace.dependencies]
+steam-model = { path = "crates/steam-model" }
+steam-api = { path = "crates/steam-api" }
+steam-seed = { path = "crates/steam-seed" }

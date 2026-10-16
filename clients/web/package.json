@@ -1,0 +1,29 @@
+{
+  "name": "native-steam-web",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Native Steam — the web client (Next.js static export).",
+  "packageManager": "pnpm@11.18.0",
+  "scripts": {
+    "snapshot": "node scripts/copy-snapshot.mjs",
+    "dev": "node scripts/copy-snapshot.mjs && next dev",
+    "build": "node scripts/copy-snapshot.mjs && next build",
+    "typecheck": "node scripts/copy-snapshot.mjs && tsc --noEmit",
+    "serve": "node scripts/serve.mjs",
+    "screenshots": "node scripts/screenshots.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "1.58.0",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "^19",
+    "playwright": "1.64.1",
+    "typescript": "5.9.3"
+  }
+}

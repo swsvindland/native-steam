@@ -1,0 +1,50 @@
+name: windows
+
+on:
+  push:
+    branches: [main]
+    paths: ["clients/windows/**", "data/**", ".github/workflows/windows.yml"]
+  pull_request:
+    paths: ["clients/windows/**", "data/**", ".github/workflows/windows.yml"]
+  workflow_dispatch:
+
+jobs:
+  build-and-screenshot:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    env:
+      DOTNET_NOLOGO: "1"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build (x64, Release)
+        run: dotnet build clients/windows/NativeSteam/NativeSteam.csproj -c Release -p:Platform=x64
+
+      - name: Screenshots
+        shell: powershell
+        run: |
+          ./clients/windows/scripts/screenshots.ps1 -Configuration Release -Platform x64 -OutDir docs/screenshots/windows -Size 1440x900 -WaitSeconds 12
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-screenshots
+          path: docs/screenshots/windows/*.png
+          if-no-files-found: warn
+
+      - name: Upload app log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-app-log
+          path: clients/windows/NativeSteam/bin/**/nativesteam.log
+          if-no-files-found: ignore
+
+      - name: Build (ARM64, Release)
+        run: dotnet build clients/windows/NativeSteam/NativeSteam.csproj -c Release -p:Platform=ARM64

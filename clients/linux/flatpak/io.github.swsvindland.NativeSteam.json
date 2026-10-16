@@ -1,0 +1,36 @@
+{
+  "id": "io.github.swsvindland.NativeSteam",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "48",
+  "sdk": "org.gnome.Sdk",
+  "sdk-extensions": ["org.freedesktop.Sdk.Extension.rust-stable"],
+  "command": "native-steam",
+  "finish-args": [
+    "--share=ipc",
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=all"
+  ],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/rust-stable/bin",
+    "env": { "CARGO_HOME": "/run/build/native-steam/cargo" },
+    "build-args": ["--share=network"]
+  },
+  "modules": [
+    {
+      "name": "native-steam",
+      "buildsystem": "simple",
+      "build-commands": [
+        "cargo build --release --manifest-path clients/linux/Cargo.toml",
+        "install -Dm755 clients/linux/target/release/native-steam /app/bin/native-steam",
+        "install -Dm644 clients/linux/data/io.github.swsvindland.NativeSteam.desktop /app/share/applications/io.github.swsvindland.NativeSteam.desktop",
+        "install -Dm644 clients/linux/data/io.github.swsvindland.NativeSteam.metainfo.xml /app/share/metainfo/io.github.swsvindland.NativeSteam.metainfo.xml",
+        "install -Dm644 clients/linux/data/icons/scalable/apps/io.github.swsvindland.NativeSteam.svg /app/share/icons/hicolor/scalable/apps/io.github.swsvindland.NativeSteam.svg"
+      ],
+      "sources": [
+        { "type": "dir", "path": "../../..", "skip": ["clients/linux/target", "core/target", "clients/web", "clients/android", "clients/apple", "clients/windows"] }
+      ]
+    }
+  ]
+}

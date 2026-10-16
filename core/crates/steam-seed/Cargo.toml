@@ -1,0 +1,9 @@
+[package]
+name = "steam-seed"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+chrono = "0.4.45"
+steam-model.workspace = true

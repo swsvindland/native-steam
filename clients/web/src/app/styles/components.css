@@ -1,0 +1,767 @@
+/* ---- Artwork ----------------------------------------------------------- */
+.art {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--surface);
+  width: 100%;
+}
+.page--library .art {
+  background: var(--surface-neutral);
+}
+.art[data-state="loading"] {
+  background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.045) 50%, rgba(255, 255, 255, 0) 70%);
+  background-size: 300% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+.art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 120ms var(--ease-out);
+}
+.art__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow: hidden;
+}
+.art--header {
+  aspect-ratio: 460 / 215;
+}
+.art--capsule {
+  aspect-ratio: 616 / 353;
+}
+.art--small {
+  aspect-ratio: 231 / 87;
+}
+.art--portrait {
+  aspect-ratio: 2 / 3;
+}
+.art--hero {
+  aspect-ratio: 1920 / 620;
+}
+.art--16x9 {
+  aspect-ratio: 16 / 9;
+}
+.art--fill {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+/* ---- Section headers --------------------------------------------------- */
+.section {
+  margin-top: 32px;
+}
+@media (max-width: 699.98px) {
+  .section {
+    margin-top: 26px;
+  }
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 32px;
+  margin-bottom: 10px;
+}
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+}
+.section-count {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.section-aside {
+  margin-left: auto;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.see-all {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+html[data-input="mouse"] .see-all:hover {
+  color: var(--text-title);
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(18px + env(safe-area-inset-top)) 0 12px;
+}
+.page-title h1 {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text-title);
+}
+
+.panel {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--r-card);
+  padding: 14px;
+}
+.page--library .panel {
+  background: rgba(35, 38, 46, 0.65);
+}
+
+/* ---- Shelves ----------------------------------------------------------- */
+.shelf {
+  position: relative;
+  margin: 0 calc(-1 * var(--gutter));
+}
+.shelf__track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  padding: 10px var(--gutter) 16px;
+  margin: -10px 0 -16px;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.shelf__track::-webkit-scrollbar {
+  display: none;
+}
+.shelf__track > * {
+  flex: none;
+  scroll-snap-align: start;
+}
+/* Spatial navigation drives the scroll position for keys / gamepad. */
+html[data-input="keyboard"] .shelf__track,
+html[data-input="gamepad"] .shelf__track {
+  scroll-snap-type: none;
+}
+.shelf__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(14, 22, 32, 0.82);
+  border-radius: var(--r-btn);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms;
+}
+.shelf__arrow--prev {
+  left: calc(var(--gutter) - 6px);
+}
+.shelf__arrow--next {
+  right: calc(var(--gutter) - 6px);
+}
+html[data-input="mouse"] .shelf:hover .shelf__arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+html[data-input="mouse"] .shelf[data-start="true"] .shelf__arrow--prev,
+html[data-input="mouse"] .shelf[data-end="true"] .shelf__arrow--next {
+  opacity: 0;
+  pointer-events: none;
+}
+html[data-input="mouse"] .shelf__arrow:hover {
+  background: var(--surface-hover);
+}
+
+/* ---- Price block ------------------------------------------------------- */
+.price {
+  display: inline-flex;
+  align-items: stretch;
+  flex: none;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--price-bg);
+  line-height: 1;
+  white-space: nowrap;
+}
+.price__badge {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  background: var(--discount-bg);
+  color: var(--discount-text);
+  font-weight: 600;
+  font-size: 16px;
+}
+.price__stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 4px 7px;
+}
+.price__original {
+  font-size: 11px;
+  color: var(--price-original);
+  text-decoration: line-through;
+  text-decoration-color: rgba(115, 136, 149, 0.9);
+}
+.price__final {
+  font-size: 13px;
+  color: var(--price-final);
+}
+.price:not(.price--discounted) .price__final {
+  padding: 7px 9px;
+}
+.price--discounted .price__final {
+  color: var(--price-final-discounted);
+}
+.price--soon .price__final {
+  color: var(--text-secondary);
+}
+.price--sm .price__badge {
+  font-size: 14px;
+  padding: 0 5px;
+}
+.price--sm .price__stack {
+  padding: 3px 6px;
+}
+.price--sm .price__original {
+  font-size: 10.5px;
+}
+.price--sm .price__final {
+  font-size: 12px;
+}
+.price--sm:not(.price--discounted) .price__final {
+  padding: 6px 8px;
+}
+.price--lg .price__badge {
+  font-size: 26px;
+  padding: 0 10px;
+}
+.price--lg .price__stack {
+  padding: 5px 10px;
+}
+.price--lg .price__original {
+  font-size: 12px;
+}
+.price--lg .price__final {
+  font-size: 16px;
+}
+.price--lg:not(.price--discounted) .price__final {
+  padding: 11px 14px;
+  font-size: 15px;
+}
+
+/* ---- Chips, tags, segmented ------------------------------------------- */
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+  padding: 8px;
+  margin: -8px;
+  scroll-padding-inline: 8px;
+}
+.chips::-webkit-scrollbar {
+  display: none;
+}
+.chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(103, 193, 245, 0.13);
+  color: var(--accent-link);
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background-color 120ms, color 120ms;
+}
+html[data-input="mouse"] .chip:hover {
+  background: rgba(103, 193, 245, 0.25);
+  color: #fff;
+}
+.chip[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+}
+.chip--neutral {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-body);
+}
+.chip__count {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.chip[aria-pressed="true"] .chip__count {
+  color: rgba(255, 255, 255, 0.75);
+}
+html[data-input="keyboard"] .chip:focus,
+html[data-input="gamepad"] .chip:focus {
+  border-radius: 999px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-body);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.segmented {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 5px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 120ms, color 120ms;
+}
+html[data-input="mouse"] .segmented button:hover {
+  color: var(--text-title);
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--surface-hover);
+  color: var(--text-title);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.segmented--full {
+  display: flex;
+  width: 100%;
+}
+.segmented--full button {
+  flex: 1;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ---- Buttons ----------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--r-btn);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  transition: filter 120ms, background-color 120ms, transform 120ms var(--ease-out);
+}
+.btn--lg {
+  height: 44px;
+  padding: 0 22px;
+  font-size: 15px;
+}
+.btn--xl {
+  height: 56px;
+  padding: 0 34px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.btn--play {
+  background: var(--play);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+.btn--install {
+  background: var(--install);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+.btn--secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-body);
+}
+.btn--secondary.is-on {
+  color: #fff;
+  background: rgba(26, 159, 255, 0.3);
+}
+html[data-input="mouse"] .btn--play:hover,
+html[data-input="mouse"] .btn--install:hover {
+  filter: brightness(1.12);
+}
+html[data-input="mouse"] .btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+html[data-input="touch"] .btn:active {
+  transform: scale(0.97);
+}
+html[data-input="keyboard"] .btn:focus,
+html[data-input="gamepad"] .btn:focus {
+  transform: scale(1.04);
+}
+.btn__sub {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.85;
+  margin-left: 4px;
+}
+.iconbtn--round {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-body);
+}
+.iconbtn--round.is-on {
+  color: #ffd257;
+}
+
+/* ---- Reviews, platforms, misc ----------------------------------------- */
+.review {
+  font-size: 13px;
+}
+.review--positive {
+  color: var(--review-positive);
+}
+.review--mixed {
+  color: var(--review-mixed);
+}
+.review--negative {
+  color: var(--review-negative);
+}
+.review--none {
+  color: var(--text-secondary);
+}
+.review-bg--positive {
+  background: var(--review-positive);
+}
+.review-bg--mixed {
+  background: var(--review-mixed);
+}
+.review-bg--negative {
+  background: var(--review-negative);
+}
+.review-bg--none {
+  background: var(--text-muted);
+}
+.review__count {
+  color: var(--text-secondary);
+}
+.tone-dot {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+.tone-dot--positive {
+  background: var(--review-positive);
+}
+.tone-dot--mixed {
+  background: var(--review-mixed);
+}
+.tone-dot--negative {
+  background: var(--review-negative);
+}
+
+.platforms {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-secondary);
+}
+.platforms span {
+  display: inline-flex;
+}
+
+.controller-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--r-btn);
+  background: rgba(26, 159, 255, 0.14);
+  color: var(--accent-link);
+  font-size: 13px;
+  font-weight: 600;
+}
+.controller-badge--partial {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-body);
+}
+
+.progress {
+  position: relative;
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.progress__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #47bfff, #1a9fff);
+}
+.progress--xp {
+  height: 4px;
+}
+
+.level-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid;
+  color: var(--text-title);
+  font-size: 13px;
+  font-weight: 600;
+}
+.level-ring--lg {
+  width: 44px;
+  height: 44px;
+  border-width: 3px;
+  font-size: 17px;
+}
+
+.live-dot {
+  display: inline-block;
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--status-ingame);
+  box-shadow: 0 0 0 3px rgba(144, 186, 60, 0.22);
+  vertical-align: 1px;
+  margin-right: 2px;
+}
+
+.avatar {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  border-radius: var(--r-avatar);
+  padding: 2px;
+  background: var(--status-offline);
+}
+.avatar .art {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+}
+.avatar .art__label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.avatar--inGame {
+  background: var(--status-ingame);
+}
+.avatar--online {
+  background: var(--status-online);
+}
+.avatar--away {
+  background: var(--status-away);
+}
+.avatar--offline .art img {
+  filter: saturate(0.4) brightness(0.8);
+}
+.status-text--inGame {
+  color: var(--status-ingame);
+}
+.status-text--online {
+  color: var(--status-online);
+}
+.status-text--away {
+  color: var(--status-away);
+}
+.status-text--offline {
+  color: var(--status-offline);
+}
+
+/* ---- Search fields ----------------------------------------------------- */
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search__icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+.search__input {
+  width: 100%;
+  height: 40px;
+  padding: 0 36px 0 38px;
+  border-radius: var(--r-btn);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 16, 24, 0.55);
+  color: var(--text-title);
+  font-size: 14px;
+  transition: border-color 120ms, background-color 120ms;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search__input::-webkit-search-cancel-button {
+  display: none;
+}
+.search__input::placeholder {
+  color: var(--text-secondary);
+}
+.search__input:focus {
+  border-color: var(--accent);
+  background: rgba(10, 16, 24, 0.75);
+}
+.search__clear {
+  position: absolute;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--text-secondary);
+}
+html[data-input="touch"] .search__input {
+  height: 44px;
+  font-size: 16px;
+}
+
+/* ---- Friends rows (community rail, game page, profile) ----------------- */
+.friend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.friend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--r-btn);
+  min-width: 0;
+}
+html[data-input="mouse"] a.friend-row:hover {
+  background: var(--surface-hover);
+  transform: none;
+}
+.friend-row__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+.friend-row__name {
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.friend-row__status {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.status--inGame .friend-row__name,
+.status--inGame .friend-row__status {
+  color: var(--status-ingame);
+}
+.status--online .friend-row__name,
+.status--online .friend-row__status {
+  color: var(--status-online);
+}
+.status--away .friend-row__name,
+.status--away .friend-row__status {
+  color: var(--status-away);
+}
+.status--offline .friend-row__name {
+  color: var(--status-offline);
+}
+.status--offline .friend-row__status {
+  color: var(--text-muted);
+}
+.friend-list--panel {
+  padding: 8px;
+}
+.empty {
+  padding: 32px 0;
+  color: var(--text-secondary);
+}
+
+/* Lightbox thumbnails */
+.shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--r-card);
+}
+.not-found {
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+.not-found h1 {
+  font-size: 28px;
+  color: var(--text-title);
+}

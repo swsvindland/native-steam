@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+# Copied from ../../data/snapshot.json by scripts/copy-snapshot.mjs
+src/generated/

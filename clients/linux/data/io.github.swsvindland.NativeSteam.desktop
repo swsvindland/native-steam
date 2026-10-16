@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Native Steam
+GenericName=Game Library
+Comment=Unofficial concept of a native Steam client (GTK 4 + libadwaita)
+Exec=native-steam
+Icon=io.github.swsvindland.NativeSteam
+Terminal=false
+Type=Application
+Categories=Game;GTK;
+Keywords=steam;games;library;store;gamepad;
+StartupNotify=true

@@ -1,0 +1,63 @@
+name: linux
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "clients/linux/**"
+      - "core/crates/steam-model/**"
+      - "data/snapshot.json"
+      - ".github/workflows/linux.yml"
+  pull_request:
+    paths:
+      - "clients/linux/**"
+      - "core/crates/steam-model/**"
+      - "data/snapshot.json"
+      - ".github/workflows/linux.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Ubuntu 24.04 LTS ships GTK 4.14 and libadwaita 1.5 — the client's baseline.
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: clients/linux
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install GTK 4, libadwaita and udev (gamepads) headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libgtk-4-dev libadwaita-1-dev libudev-dev pkg-config
+          pkg-config --modversion gtk4 libadwaita-1
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: clients/linux
+
+      - name: Format
+        run: cargo fmt --check
+
+      - name: Build
+        run: cargo build --locked
+
+      - name: Clippy
+        run: cargo clippy --locked --all-targets -- -D warnings
+
+      - name: Release build
+        run: cargo build --locked --release
+
+      - name: Smoke test (CLI)
+        run: ./target/release/native-steam --help
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-steam-linux-x86_64
+          path: clients/linux/target/release/native-steam
+          if-no-files-found: error

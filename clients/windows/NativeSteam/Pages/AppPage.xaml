@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NativeSteam.Pages.AppPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:NativeSteam.Controls"
+    xmlns:vm="using:NativeSteam.ViewModels"
+    Foreground="{StaticResource TextBodyBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Key="ScreenshotThumbTemplate" x:DataType="vm:ScreenshotVM">
+            <controls:CardButton Width="128" Height="72" Padding="0" CornerRadius="3" Click="OnThumbClick" Style="{StaticResource CardButtonStyle}" AutomationProperties.Name="Screenshot">
+                <controls:ArtImage Url="{x:Bind Thumbnail}" CornerRadius="3" DecodeWidth="256" />
+            </controls:CardButton>
+        </DataTemplate>
+
+        <DataTemplate x:Key="GenreChipTemplate" x:DataType="vm:TextChipVM">
+            <Border Padding="10,3,10,4" CornerRadius="11" Background="#1F66C0F4">
+                <TextBlock Text="{x:Bind Text}" FontSize="12" Foreground="{StaticResource AccentLinkBrush}" />
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{StaticResource StoreBackgroundBrush}">
+        <!-- Background art with a fade into bgStore -->
+        <Grid x:Name="HeaderArt" Height="520" VerticalAlignment="Top" IsHitTestVisible="False">
+            <controls:ArtImage x:Name="BackdropImage" Url="{x:Bind Item.Backdrop}" ShowPlaceholder="False" Opacity="0.55" DecodeWidth="1920" ImageAlignmentY="Top" />
+            <Border Background="{StaticResource StoreHeaderFadeBrush}" />
+        </Grid>
+
+        <ScrollViewer x:Name="PageScroller" Style="{StaticResource PageScrollViewerStyle}">
+            <StackPanel x:Name="ContentColumn" MaxWidth="1240" Padding="32,20,32,48" Spacing="20" XYFocusKeyboardNavigation="Enabled">
+
+                <!-- Breadcrumb + title -->
+                <StackPanel Spacing="6">
+                    <TextBlock Style="{StaticResource MetaTextStyle}">
+                        <Run Text="All Games  ›  " />
+                        <Run Text="{x:Bind Item.GenresText}" />
+                        <Run Text="  ›  " />
+                        <Run Text="{x:Bind Item.Name}" />
+                    </TextBlock>
+                    <TextBlock Text="{x:Bind Item.Name}" Style="{StaticResource PageTitleTextStyle}" />
+                </StackPanel>
+
+                <!-- Media + summary -->
+                <Grid x:Name="MediaGrid" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="MediaColumn" Width="*" />
+                        <ColumnDefinition x:Name="SummaryColumn" Width="340" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="MediaPanel" Spacing="10">
+                        <controls:ArtImage x:Name="MainShot" AspectRatio="1.7778" CornerRadius="4" PlaceholderText="{x:Bind Item.Name}" DecodeWidth="1280" />
+                        <ItemsControl x:Name="ThumbStrip"
+                                      ItemsSource="{x:Bind Item.Screenshots}"
+                                      ItemTemplate="{StaticResource ScreenshotThumbTemplate}"
+                                      Style="{StaticResource ShelfStyle}" />
+                    </StackPanel>
+
+                    <StackPanel x:Name="SummaryPanel" Grid.Column="1" Spacing="14">
+                        <controls:ArtImage AspectRatio="2.1395" Url="{x:Bind Item.Header}" PlaceholderText="{x:Bind Item.Name}" CornerRadius="4" DecodeWidth="460" />
+                        <TextBlock Text="{x:Bind Item.ShortDescription}" Style="{StaticResource BodyTextStyle}" FontSize="13" LineHeight="20" />
+                        <Grid ColumnSpacing="12" RowSpacing="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="ALL REVIEWS:" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" FontSize="13">
+                                <Run Text="{x:Bind Item.ReviewLabel}" Foreground="{x:Bind Item.ReviewBrush}" FontWeight="SemiBold" />
+                                <Run Text="{x:Bind Item.ReviewTotal}" Foreground="{StaticResource TextSecondaryBrush}" />
+                            </TextBlock>
+                            <TextBlock Grid.Row="1" Text="RELEASE DATE:" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind Item.ReleaseText}" FontSize="13" Foreground="{StaticResource TextBodyBrush}" />
+                            <TextBlock Grid.Row="2" Text="DEVELOPER:" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind Item.DevelopersText}" FontSize="13" Foreground="{StaticResource AccentLinkBrush}" TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                        <TextBlock Text="{x:Bind Item.ReviewDetail}" Style="{StaticResource MetaTextStyle}" TextWrapping="WrapWholeWords" Visibility="{x:Bind Item.ReviewVisibility}" />
+                        <ItemsControl ItemsSource="{x:Bind Item.Genres}" ItemTemplate="{StaticResource GenreChipTemplate}" Style="{StaticResource InlineChipsStyle}" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Purchase box -->
+                <Grid x:Name="PurchaseBox" Padding="20,16,16,16" CornerRadius="4" ColumnSpacing="16">
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FF2A475E" Offset="0" />
+                            <GradientStop Color="#FF1B2838" Offset="1" />
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Spacing="6">
+                        <TextBlock FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource TextTitleBrush}" TextTrimming="CharacterEllipsis">
+                            <Run Text="Buy " />
+                            <Run Text="{x:Bind Item.Name}" />
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE7F8;" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind Item.PlatformsText}" Style="{StaticResource MetaTextStyle}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="6" Visibility="{x:Bind Item.ControllerVisibility}">
+                                <FontIcon Glyph="&#xE7FC;" FontSize="14" Foreground="{StaticResource AccentLinkBrush}" />
+                                <TextBlock Text="{x:Bind Item.ControllerLabel}" FontSize="12" Foreground="{StaticResource AccentLinkBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel x:Name="BuyActions" Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <controls:PriceBlock IsLarge="True" Price="{x:Bind Item.Price}" FallbackText="{x:Bind Item.PriceFallback}" />
+                        <Button x:Name="AddToCartButton"
+                                Style="{StaticResource GradientButtonStyle}"
+                                Background="{StaticResource InstallButtonBrush}"
+                                FontSize="15"
+                                Click="OnAddToCartClick"
+                                AutomationProperties.Name="Add to Cart">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE7BF;" FontSize="16" />
+                                <TextBlock x:Name="AddToCartLabel" Text="Add to Cart" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="WishlistButton" Style="{StaticResource SecondaryActionButtonStyle}" MinHeight="48" Click="OnWishlistClick" AutomationProperties.Name="Add to wishlist">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon x:Name="WishlistGlyph" Glyph="&#xEB51;" FontSize="15" />
+                                <TextBlock x:Name="WishlistLabel" Text="Wishlist" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- About -->
+                <StackPanel Spacing="10" Margin="0,8,0,0">
+                    <controls:SectionHeader Title="About this game" />
+                    <Border Height="1" Background="{StaticResource DividerBrush}" />
+                    <TextBlock Text="{x:Bind Item.ShortDescription}" Style="{StaticResource BodyTextStyle}" MaxWidth="820" HorizontalAlignment="Left" />
+                    <StackPanel Orientation="Horizontal" Spacing="24" Margin="0,8,0,0">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="GENRE" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBlock Text="{x:Bind Item.GenresText}" FontSize="13" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="DEVELOPER" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBlock Text="{x:Bind Item.DevelopersText}" FontSize="13" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="RELEASE DATE" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBlock Text="{x:Bind Item.ReleaseText}" FontSize="13" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

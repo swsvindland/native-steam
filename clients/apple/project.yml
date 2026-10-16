@@ -1,0 +1,118 @@
+# Native Steam — Apple clients (macOS + iOS/iPadOS).
+# Regenerate the Xcode project with:  cd clients/apple && xcodegen generate
+name: NativeSteam
+
+options:
+  bundleIdPrefix: io.github.nativesteam
+  deploymentTarget:
+    iOS: "26.0"
+    macOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+    GENERATE_INFOPLIST_FILE: NO
+
+packages:
+  SteamKit:
+    path: Packages/SteamKit
+
+targets:
+  NativeSteam-macOS:
+    type: application
+    platform: macOS
+    sources:
+      - path: App/macOS
+      - path: App/Shared
+      # The shared snapshot is referenced in place, never copied into the repo twice.
+      - path: ../../data/snapshot.json
+        buildPhase: resources
+        group: Data
+    dependencies:
+      - package: SteamKit
+    info:
+      path: App/macOS/Info.plist
+      properties:
+        CFBundleName: Native Steam
+        CFBundleDisplayName: Native Steam
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.games
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSHumanReadableCopyright: Unofficial concept. Not affiliated with or endorsed by Valve.
+        GCSupportsControllerUserInteraction: true
+    settings:
+      base:
+        PRODUCT_NAME: NativeSteam
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.nativesteam.mac
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIconMac
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+        ENABLE_HARDENED_RUNTIME: NO
+        COMBINE_HIDPI_IMAGES: YES
+    scheme:
+      commandLineArguments:
+        "-tab library": false
+        "-game 1145350": false
+        "-app 3470960": false
+        "-input gamepad": false
+
+  NativeSteam-iOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: App/iOS
+      - path: App/Shared
+      - path: ../../data/snapshot.json
+        buildPhase: resources
+        group: Data
+    dependencies:
+      - package: SteamKit
+    info:
+      path: App/iOS/Info.plist
+      properties:
+        CFBundleName: Native Steam
+        CFBundleDisplayName: Native Steam
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UIUserInterfaceStyle: Dark
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        GCSupportsControllerUserInteraction: true
+        GCSupportedGameControllers:
+          - ProfileName: ExtendedGamepad
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_NAME: NativeSteam
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.nativesteam.ios
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        CODE_SIGN_STYLE: Automatic
+    scheme:
+      commandLineArguments:
+        "-tab library": false
+        "-game 1145350": false
+        "-app 3470960": false
+        "-input gamepad": false
