@@ -186,9 +186,12 @@ these are Native Steam's own numbers, as a reference.
 | Platform | Measured with | Cold start | Memory |
 |---|---|---:|---:|
 | **Android**, Jetpack Compose (release build, R8) | `am start -W` TotalTime: process start → first frame, 10 runs. Pixel emulator (Android 16, arm64) on the M1 Max | **0.15 s** <sub>p90 0.18 s</sub> | 63 MiB PSS |
-| **Windows**, WinUI 3 (Release, self-contained) | Process start → main window visible, 10 runs on a GitHub Actions `windows-latest` VM | <!-- WIN_TTW --> | <!-- WIN_MEM --> |
+| **Windows**, WinUI 3 (Release, self-contained) | Process start → main window visible, 10 runs on a GitHub Actions `windows-latest` VM (2 vCPUs, no GPU, Windows Server 2025) | **0.91 s** <sub>p90 1.67 s</sub> | 107 MiB private · 232 MiB working set |
 
 Scripts: [`clients/android/scripts/coldstart.sh`](../clients/android/scripts/coldstart.sh)
 and [`clients/windows/scripts/coldstart.ps1`](../clients/windows/scripts/coldstart.ps1).
 The Windows one runs in CI on every push (`windows.yml`, artifact `windows-coldstart`).
+A shared 2-core VM with software rendering is noisy (0.67–1.81 s across these
+runs) and slower than a real gaming PC, so read it as a ceiling rather than a
+comparison with Epic's PC figures.
 

@@ -1,0 +1,10 @@
+{"app":"native-steam-winui","mode":"cold","run":1,"ttw_ms":741.2,"private_mib":103.8,"working_set_mib":230.6,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":2,"ttw_ms":750.9,"private_mib":108.7,"working_set_mib":234.7,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":3,"ttw_ms":1074.5,"private_mib":106.5,"working_set_mib":227,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":4,"ttw_ms":1514,"private_mib":106.4,"working_set_mib":228.6,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":5,"ttw_ms":1671.3,"private_mib":111.4,"working_set_mib":232.5,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":6,"ttw_ms":1806,"private_mib":113.6,"working_set_mib":239.6,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":7,"ttw_ms":697.2,"private_mib":104.6,"working_set_mib":226.2,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":8,"ttw_ms":743.6,"private_mib":108.2,"working_set_mib":234.9,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":9,"ttw_ms":671.8,"private_mib":106.4,"working_set_mib":228.5,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
+{"app":"native-steam-winui","mode":"cold","run":10,"ttw_ms":1230.7,"private_mib":114.6,"working_set_mib":241.1,"runner":"GitHub Actions 1000000683","os":"Microsoft Windows NT 10.0.26100.0","cpus":2}
