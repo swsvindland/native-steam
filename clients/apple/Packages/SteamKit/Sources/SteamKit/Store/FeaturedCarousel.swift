@@ -202,7 +202,7 @@ private struct FeaturedCompact: View {
     var body: some View {
         VStack(spacing: 10) {
             ScrollView(.horizontal) {
-                HStack(spacing: 10) {
+                LazyHStack(spacing: 10) {
                     ForEach(items) { item in
                         Button { model.push(.storeApp(item.appId)) } label: {
                             FeaturedCompactCard(item: item)

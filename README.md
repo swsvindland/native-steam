@@ -56,6 +56,26 @@ Every client implements the same four tabs (**Store**, **Library**,
 **Community** and the persona tab, **KESTREL**), plus a store app page and a
 library game page.
 
+## Performance
+
+On October 14, 2026, Epic previewed a rebuilt launcher with a
+[5.47 s cold start vs Steam's 10.07 s](https://launcher.epicgames.com/).
+We measured all three on the same Mac, with the same black-box harness:
+
+<p align="center"><img src="docs/benchmarks/scoreboard.svg" alt="Cold start, memory, reopen and tab-switch benchmarks: Native Steam vs Epic's new launcher vs Steam" width="900"></p>
+
+- **Cold start:** Native Steam's store is fully drawn in **0.77 s**: **2× faster
+  than Epic's new launcher** (1.54 s) and **10× faster than Steam** (7.77 s).
+- **Memory:** **102 MiB**, against 745 MiB for Epic (Tauri + WebKit) and 955 MiB
+  for Steam (CEF).
+- **Store tab:** opens in **0.08 s**, against 0.30 s for Epic and 0.71 s for Steam.
+- **Web store front:** the Next.js build scores **87** on Lighthouse (desktop)
+  to store.steampowered.com's 78, with a fifth of the JavaScript.
+
+Methodology, caveats (Native Steam renders a bundled snapshot rather than
+fetching the store live) and raw data are in
+**[docs/BENCHMARKS.md](docs/BENCHMARKS.md)**.
+
 ## Screenshots
 
 ### macOS: SwiftUI

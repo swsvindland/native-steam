@@ -24,7 +24,9 @@ public struct Shelf<Data: RandomAccessCollection, Content: View>: View where Dat
 
     public var body: some View {
         ScrollView(.horizontal) {
-            HStack(alignment: .top, spacing: spacing) {
+            // Lazy: only on-screen cards (plus the focus look-ahead card) are built,
+            // which keeps cold start fast with long shelves.
+            LazyHStack(alignment: .top, spacing: spacing) {
                 ForEach(items) { item in
                     content(item)
                 }

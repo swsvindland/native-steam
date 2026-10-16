@@ -84,7 +84,7 @@ export function HeroCarousel({ items }: { items: StoreItem[] }) {
             data-name={item.name}
           >
             <span className="hero__capsule">
-              <Art className="art--capsule" src={item.images.capsule} label={item.name} eager={i < 2} />
+              <Art className="art--capsule" src={item.images.capsule} label={item.name} eager={i < 2} priority={i === 0} />
               <span className="hero__overlay">
                 <span className="hero__overlay-name">{item.name}</span>
                 <PriceBlock price={item.price} releaseDate={item.releaseDate} comingSoon={item.comingSoon} size="sm" />

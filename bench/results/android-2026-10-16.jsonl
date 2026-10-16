@@ -1,0 +1,10 @@
+{"app":"native-steam-android","mode":"cold","run":1,"ttfd_ms":183,"pss_mib":68.5,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":2,"ttfd_ms":139,"pss_mib":62.8,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":3,"ttfd_ms":183,"pss_mib":70.9,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":4,"ttfd_ms":146,"pss_mib":62.7,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":5,"ttfd_ms":147,"pss_mib":62.8,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":6,"ttfd_ms":132,"pss_mib":62.6,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":7,"ttfd_ms":287,"pss_mib":62.9,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":8,"ttfd_ms":146,"pss_mib":62.8,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":9,"ttfd_ms":154,"pss_mib":62.8,"device":"sdk_gphone64_arm64"}
+{"app":"native-steam-android","mode":"cold","run":10,"ttfd_ms":133,"pss_mib":66.7,"device":"sdk_gphone64_arm64"}

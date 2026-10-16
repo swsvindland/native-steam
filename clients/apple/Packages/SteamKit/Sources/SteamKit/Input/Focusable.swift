@@ -7,6 +7,9 @@ extension EnvironmentValues {
     @Entry var focusContainers: [String] = []
     /// True while the enclosing focusable card is hovered (pointer) or focused (keyboard/gamepad).
     @Entry public var cardHighlighted: Bool = false
+    /// False for tabs kept alive in the background (regular layout): their screens
+    /// must not offer focus targets to the engine.
+    @Entry public var tabIsActive: Bool = true
 }
 
 #if os(macOS)
@@ -184,21 +187,36 @@ extension View {
 struct FocusScopeModifier: ViewModifier {
     let scope: String
     @Environment(FocusEngine.self) private var engine
+    @Environment(\.tabIsActive) private var tabIsActive
     @State private var lastFrames: [String: FocusFrame] = [:]
+    @State private var onScreen = false
 
     func body(content: Content) -> some View {
         content
             .onPreferenceChange(FocusFramesKey.self) { frames in
                 MainActor.assumeIsolated {
                     lastFrames = frames
-                    engine.setFrames(frames, scope: scope)
+                    if tabIsActive && onScreen { engine.setFrames(frames, scope: scope) }
                 }
             }
             .onAppear {
-                engine.activateScope(scope)
-                engine.setFrames(lastFrames, scope: scope)
+                onScreen = true
+                if tabIsActive { activate() }
             }
-            .onDisappear { engine.removeScope(scope) }
+            .onDisappear {
+                onScreen = false
+                engine.removeScope(scope)
+            }
+            .onChange(of: tabIsActive) { _, active in
+                // A kept-alive tab coming back (or going to the background).
+                guard onScreen else { return }
+                if active { activate() } else { engine.removeScope(scope) }
+            }
+    }
+
+    private func activate() {
+        engine.activateScope(scope)
+        engine.setFrames(lastFrames, scope: scope)
     }
 }
 

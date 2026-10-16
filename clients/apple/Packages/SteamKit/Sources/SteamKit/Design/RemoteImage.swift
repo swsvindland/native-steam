@@ -11,6 +11,9 @@ public struct DecodedImage: @unchecked Sendable {
     public var size: CGSize { CGSize(width: cgImage.width, height: cgImage.height) }
 }
 
+/// Loads faster than this (disk-cache hits) appear without a fade.
+private let fadeThreshold = Duration.milliseconds(120)
+
 /// Tiny image pipeline: disk cache via a large `URLCache`, in-memory cache of decoded
 /// (and downsampled) bitmaps, request coalescing, decoding off the main thread.
 @MainActor
@@ -142,8 +145,11 @@ public struct RemoteImage: View {
                     image = hit
                     return
                 }
+                let started = ContinuousClock.now
                 let loaded = await ImagePipeline.shared.load(url, maxPixel: maxPixel)
-                withAnimation(.easeOut(duration: 0.2)) {
+                // Fade in only when the image actually kept the user waiting; disk-cache
+                // hits land within a few frames and should just appear.
+                withAnimation(ContinuousClock.now - started > fadeThreshold ? .easeOut(duration: 0.2) : nil) {
                     image = loaded
                     failed = loaded == nil
                 }
@@ -196,8 +202,9 @@ public struct LogoImage: View {
         }
         .task(id: url) {
             guard let url, image == nil else { return }
+            let started = ContinuousClock.now
             let loaded = await ImagePipeline.shared.load(url, maxPixel: maxPixel)
-            withAnimation(.easeOut(duration: 0.2)) {
+            withAnimation(ContinuousClock.now - started > fadeThreshold ? .easeOut(duration: 0.2) : nil) {
                 image = loaded
                 resolved = true
             }

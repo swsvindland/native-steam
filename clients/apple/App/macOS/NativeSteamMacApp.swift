@@ -9,7 +9,11 @@ struct NativeSteamMacApp: App {
     @State private var engine = FocusEngine()
 
     init() {
-        _model = State(initialValue: AppModel(snapshot: loadSnapshotOrDie()))
+        LaunchTrace.mark("app-init")
+        let snapshot = loadSnapshotOrDie()
+        LaunchTrace.mark("snapshot-decoded")
+        _model = State(initialValue: AppModel(snapshot: snapshot))
+        LaunchTrace.mark("model-ready")
     }
 
     var body: some Scene {
@@ -29,11 +33,39 @@ struct NativeSteamMacApp: App {
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    /// The main window. Closing it only hides it (see `hideMainWindow`), so the
+    /// view tree, scroll positions and decoded artwork stay warm in the background.
+    @MainActor static weak var mainWindow: NSWindow?
+    private var keyMonitor: Any?
+
     func applicationWillFinishLaunching(_ notification: Notification) {
         NSApp.appearance = NSAppearance(named: .darkAqua)
     }
 
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // ⌘W hides like the close button does; ⌘Q still quits.
+        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            let mods = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            guard mods == .command, event.charactersIgnoringModifiers == "w",
+                  let window = Self.mainWindow, event.window === window else { return event }
+            Self.hideMainWindow()
+            return nil
+        }
+    }
+
+    /// Like Steam and the Epic launcher, keep running in the background when the
+    /// window closes (downloads, friends); clicking the Dock icon brings it back.
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        guard !flag, let window = Self.mainWindow else { return true }
+        window.makeKeyAndOrderFront(nil)
+        return false
+    }
+
+    @MainActor static func hideMainWindow() {
+        mainWindow?.orderOut(nil)
+    }
 }
 
 /// Configures the hosting NSWindow: Steam chrome colour, mouse-moved events for input
@@ -65,10 +97,21 @@ private struct WindowConfigurator: NSViewRepresentable {
             super.viewDidMoveToWindow()
             guard let window, !configured else { return }
             configured = true
+            LaunchTrace.mark("window-attached")
+            AppDelegate.mainWindow = window
+            // The close button hides instead of destroying the window (see AppDelegate).
+            if let close = window.standardWindowButton(.closeButton) {
+                close.target = self
+                close.action = #selector(hideWindow)
+            }
+            DispatchQueue.main.async { LaunchTrace.mark("first-runloop-after-window") }
             window.backgroundColor = NSColor(red: 0x17 / 255, green: 0x1A / 255, blue: 0x21 / 255, alpha: 1)
             window.acceptsMouseMovedEvents = true
             window.titlebarSeparatorStyle = .none
             window.tabbingMode = .disallowed
+            // Show instantly (no zoom-in) when launched or brought back from the
+            // background, like a launcher should; the content is already drawn.
+            window.animationBehavior = .none
 
             let names: [Notification.Name] = [
                 NSWindow.didResizeNotification, NSWindow.didEndLiveResizeNotification,
@@ -90,6 +133,10 @@ private struct WindowConfigurator: NSViewRepresentable {
             layoutTrafficLights()
         }
 
+
+        @objc private func hideWindow() {
+            AppDelegate.hideMainWindow()
+        }
 
         /// Vertically centres the close / minimise / zoom buttons in the nav bar.
         func layoutTrafficLights() {

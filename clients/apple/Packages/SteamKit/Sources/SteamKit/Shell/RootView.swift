@@ -14,6 +14,7 @@ public struct SteamRootView: View {
     }
 
     public var body: some View {
+        let _ = LaunchTrace.mark("root-body")
         GeometryReader { geo in
             let layout = LayoutMetrics(width: geo.size.width)
             ShellView(isCompact: layout.isCompact)
@@ -27,7 +28,12 @@ public struct SteamRootView: View {
         #if os(iOS)
         .background(TouchObserverInstaller(coordinator: coordinator))
         #endif
-        .task { coordinator.start() }
+        .onAppear { LaunchTrace.mark("root-appear") }
+        .task {
+            LaunchTrace.mark("input-start")
+            coordinator.start()
+            LaunchTrace.mark("input-started")
+        }
         .onChange(of: model.tab) { _, _ in
             if engine.showsFocus { engine.requestDefaultFocus() }
         }
@@ -84,16 +90,30 @@ private struct ShellView: View {
 private struct RegularShell: View {
     @Environment(AppModel.self) private var model
     @Environment(FocusEngine.self) private var engine
+    /// Tabs are built on first visit and then kept alive, so switching back is a
+    /// visibility flip (no rebuild, no crossfade) and each tab keeps its scroll
+    /// position and navigation stack.
+    @State private var visited: Set<AppTab> = []
 
     var body: some View {
         VStack(spacing: 0) {
             TopNavBar()
                 .zIndex(1)
             ZStack {
-                TabStack(tab: model.tab)
-                    .id(model.tab)
-                    .transition(.opacity)
+                ForEach(AppTab.allCases) { tab in
+                    if tab == model.tab || visited.contains(tab) {
+                        let active = tab == model.tab
+                        TabStack(tab: tab)
+                            .environment(\.tabIsActive, active)
+                            .opacity(active ? 1 : 0)
+                            .allowsHitTesting(active)
+                            .disabled(!active)
+                            .accessibilityHidden(!active)
+                            .zIndex(active ? 1 : 0)
+                    }
+                }
             }
+            .onChange(of: model.tab, initial: true) { _, tab in visited.insert(tab) }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 // Fills the horizontal safe areas (e.g. iPhone landscape) behind the stack.

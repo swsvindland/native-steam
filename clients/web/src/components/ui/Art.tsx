@@ -13,6 +13,7 @@ export function Art({
   label,
   className = "",
   eager = false,
+  priority = false,
   fallbackSrc,
   position,
 }: {
@@ -22,6 +23,8 @@ export function Art({
   label?: string;
   className?: string;
   eager?: boolean;
+  /** The page's hero (LCP) image: load eagerly at high fetch priority. */
+  priority?: boolean;
   /** Tried once if `src` fails (e.g. hero → capsule). */
   fallbackSrc?: string | null;
   /** object-position override, e.g. "center top". */
@@ -59,8 +62,9 @@ export function Art({
           ref={img}
           src={current}
           alt={alt}
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
+          loading={eager || priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : undefined}
+          decoding={priority ? "sync" : "async"}
           draggable={false}
           onLoad={() => setState("loaded")}
           onError={onError}

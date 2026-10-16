@@ -38,6 +38,18 @@ jobs:
           path: docs/screenshots/windows/*.png
           if-no-files-found: warn
 
+      - name: Cold-start benchmark
+        shell: powershell
+        run: ./clients/windows/scripts/coldstart.ps1 -Runs 10 -Out bench/results/windows-ci.jsonl
+
+      - name: Upload benchmark
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-coldstart
+          path: bench/results/windows-ci.jsonl
+          if-no-files-found: warn
+
       - name: Upload app log
         if: always()
         uses: actions/upload-artifact@v4

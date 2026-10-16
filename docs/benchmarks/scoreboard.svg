@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 514" width="980" height="514" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="COLD OPEN, HEAD TO HEAD">
+<rect width="980" height="514" rx="10" fill="#171a21"/>
+<text x="28" y="42" fill="#e6edf3" font-size="20" font-weight="700" letter-spacing="1.5">COLD OPEN, HEAD TO HEAD</text>
+<text x="28" y="64" fill="#8f98a0" font-size="13">macOS 27 · Apple M1 Max · medians · lower is better</text>
+<text x="28.0" y="96" fill="#e6edf3" font-size="15" font-weight="600">Cold start → store fully drawn</text>
+<text x="28.0" y="114" fill="#8f98a0" font-size="12">median of 10 · lower is better</text>
+<text x="28.0" y="136" fill="#e6edf3" font-size="12" font-weight="600">Native Steam (SwiftUI)</text>
+<rect x="28.0" y="144" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="28.0" y="144" width="35.9" height="14" rx="4" fill="#3987e5"/>
+<text x="398.0" y="156" fill="#e6edf3" font-size="13" font-weight="600">0.77 s</text>
+<text x="28.0" y="182" fill="#8f98a0" font-size="12">Epic Games Launcher (new, preview)</text>
+<rect x="28.0" y="190" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="28.0" y="190" width="71.6" height="14" rx="4" fill="#5b6570"/>
+<text x="398.0" y="202" fill="#e6edf3" font-size="13" font-weight="400">1.54 s</text>
+<text x="28.0" y="228" fill="#8f98a0" font-size="12">Steam</text>
+<rect x="28.0" y="236" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="28.0" y="236" width="362.0" height="14" rx="4" fill="#5b6570"/>
+<text x="398.0" y="248" fill="#e6edf3" font-size="13" font-weight="400">7.77 s</text>
+<text x="508.0" y="96" fill="#e6edf3" font-size="15" font-weight="600">Memory after cold start</text>
+<text x="508.0" y="114" fill="#8f98a0" font-size="12">all processes incl. WebKit / CEF helpers</text>
+<text x="508.0" y="136" fill="#e6edf3" font-size="12" font-weight="600">Native Steam (SwiftUI)</text>
+<rect x="508.0" y="144" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="508.0" y="144" width="38.6" height="14" rx="4" fill="#3987e5"/>
+<text x="878.0" y="156" fill="#e6edf3" font-size="13" font-weight="600">102 MiB</text>
+<text x="508.0" y="182" fill="#8f98a0" font-size="12">Epic Games Launcher (new, preview)</text>
+<rect x="508.0" y="190" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="508.0" y="190" width="282.5" height="14" rx="4" fill="#5b6570"/>
+<text x="878.0" y="202" fill="#e6edf3" font-size="13" font-weight="400">745 MiB</text>
+<text x="508.0" y="228" fill="#8f98a0" font-size="12">Steam</text>
+<rect x="508.0" y="236" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="508.0" y="236" width="362.0" height="14" rx="4" fill="#5b6570"/>
+<text x="878.0" y="248" fill="#e6edf3" font-size="13" font-weight="400">955 MiB</text>
+<text x="28.0" y="306" fill="#e6edf3" font-size="15" font-weight="600">Background → window fully drawn</text>
+<text x="28.0" y="324" fill="#8f98a0" font-size="12">reopen from the Dock · median of 5</text>
+<text x="28.0" y="346" fill="#e6edf3" font-size="12" font-weight="600">Native Steam (SwiftUI)</text>
+<rect x="28.0" y="354" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="28.0" y="354" width="59.4" height="14" rx="4" fill="#3987e5"/>
+<text x="398.0" y="366" fill="#e6edf3" font-size="13" font-weight="600">0.16 s</text>
+<text x="28.0" y="392" fill="#8f98a0" font-size="12">Epic Games Launcher (new, preview)</text>
+<rect x="28.0" y="400" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="28.0" y="400" width="64.6" height="14" rx="4" fill="#5b6570"/>
+<text x="398.0" y="412" fill="#e6edf3" font-size="13" font-weight="400">0.17 s</text>
+<text x="28.0" y="438" fill="#8f98a0" font-size="12">Steam</text>
+<rect x="28.0" y="446" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="28.0" y="446" width="362.0" height="14" rx="4" fill="#5b6570"/>
+<text x="398.0" y="458" fill="#e6edf3" font-size="13" font-weight="400">0.95 s</text>
+<text x="508.0" y="306" fill="#e6edf3" font-size="15" font-weight="600">Switch to the Store tab</text>
+<text x="508.0" y="324" fill="#8f98a0" font-size="12">click → fully drawn · median of 5</text>
+<text x="508.0" y="346" fill="#e6edf3" font-size="12" font-weight="600">Native Steam (SwiftUI)</text>
+<rect x="508.0" y="354" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="508.0" y="354" width="40.5" height="14" rx="4" fill="#3987e5"/>
+<text x="878.0" y="366" fill="#e6edf3" font-size="13" font-weight="600">0.08 s</text>
+<text x="508.0" y="392" fill="#8f98a0" font-size="12">Epic Games Launcher (new, preview)</text>
+<rect x="508.0" y="400" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="508.0" y="400" width="154.4" height="14" rx="4" fill="#5b6570"/>
+<text x="878.0" y="412" fill="#e6edf3" font-size="13" font-weight="400">0.30 s</text>
+<text x="508.0" y="438" fill="#8f98a0" font-size="12">Steam</text>
+<rect x="508.0" y="446" width="362.0" height="14" rx="4" fill="#2a2f38"/>
+<rect x="508.0" y="446" width="362.0" height="14" rx="4" fill="#5b6570"/>
+<text x="878.0" y="458" fill="#e6edf3" font-size="13" font-weight="400">0.71 s</text>
+</svg>

@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Native Steam store (Next.js static)",
+    "url": "http://127.0.0.1:4173/store/",
+    "preset": "desktop",
+    "runs": 3,
+    "score": 87,
+    "fcp": 482.17640000000006,
+    "lcp": 2431.655070180255,
+    "tbt": 0,
+    "si": 482.17640000000006,
+    "bytes": 4938015,
+    "js_bytes": 540643,
+    "requests": 100,
+    "final_url": "http://127.0.0.1:4173/store/",
+    "samples": [
+      {
+        "score": 87,
+        "fcp": 482.17640000000006,
+        "lcp": 2509.511150348145,
+        "tbt": 0,
+        "si": 482.17640000000006,
+        "bytes": 4937959,
+        "js_bytes": 540643,
+        "requests": 100,
+        "final_url": "http://127.0.0.1:4173/store/"
+      },
+      {
+        "score": 88,
+        "fcp": 481.96058450789474,
+        "lcp": 2386.1764760999963,
+        "tbt": 0,
+        "si": 481.96058450789474,
+        "bytes": 4938015,
+        "js_bytes": 540643,
+        "requests": 100,
+        "final_url": "http://127.0.0.1:4173/store/"
+      },
+      {
+        "score": 87,
+        "fcp": 482.6046773382485,
+        "lcp": 2431.655070180255,
+        "tbt": 0,
+        "si": 482.6046773382485,
+        "bytes": 4938019,
+        "js_bytes": 540643,
+        "requests": 100,
+        "final_url": "http://127.0.0.1:4173/store/"
+      }
+    ]
+  },
+  {
+    "name": "store.steampowered.com",
+    "url": "https://store.steampowered.com/",
+    "preset": "desktop",
+    "runs": 3,
+    "score": 78,
+    "fcp": 910.0135999999998,
+    "lcp": 2770.3795999999993,
+    "tbt": 50.500000000000455,
+    "si": 2659.045646369754,
+    "bytes": 14776623,
+    "js_bytes": 2951394,
+    "requests": 132,
+    "final_url": "https://store.steampowered.com/",
+    "samples": [
+      {
+        "score": 77,
+        "fcp": 931.4221000000001,
+        "lcp": 2804.8718,
+        "tbt": 46.999999999999545,
+        "si": 2661.6398382308334,
+        "bytes": 14776623,
+        "js_bytes": 2951727,
+        "requests": 132,
+        "final_url": "https://store.steampowered.com/"
+      },
+      {
+        "score": 78,
+        "fcp": 891.2046999999999,
+        "lcp": 2708.3564999999994,
+        "tbt": 50.500000000000455,
+        "si": 2621.7465960455584,
+        "bytes": 13909511,
+        "js_bytes": 2951394,
+        "requests": 131,
+        "final_url": "https://store.steampowered.com/"
+      },
+      {
+        "score": 78,
+        "fcp": 910.0135999999998,
+        "lcp": 2770.3795999999993,
+        "tbt": 54.000000000000455,
+        "si": 2659.045646369754,
+        "bytes": 14951502,
+        "js_bytes": 2951373,
+        "requests": 136,
+        "final_url": "https://store.steampowered.com/"
+      }
+    ]
+  },
+  {
+    "name": "store.epicgames.com",
+    "url": "https://store.epicgames.com/en-US/",
+    "error": "blocked headless Chrome (bot challenge)"
+  }
+]
