@@ -20,9 +20,11 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+      # The action's default package list includes the long-removed "tools"
+      # package, so name exactly what the build needs.
       - uses: android-actions/setup-android@v3
-      - name: Install Android platform 37.1
-        run: sdkmanager "platforms;android-37.1" "build-tools;36.0.0"
+        with:
+          packages: platform-tools platforms;android-37.1 build-tools;36.0.0
       - uses: gradle/actions/setup-gradle@v4
       - name: Assemble debug APK
         run: ./gradlew assembleDebug --stacktrace

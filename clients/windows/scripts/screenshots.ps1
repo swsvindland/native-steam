@@ -78,7 +78,10 @@ public static class NsCapture
     [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr hWnd);
     [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr hWnd, IntPtr after, int x, int y, int cx, int cy, uint flags);
     [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
-    [DllImport("user32.dll")] public static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
+    [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint attach, uint attachTo, bool fAttach);
+    [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
     [DllImport("dwmapi.dll")] public static extern int DwmGetWindowAttribute(IntPtr hWnd, int attribute, out RECT rect, int size);
     [DllImport("user32.dll", CharSet = CharSet.Ansi)] public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
     [DllImport("user32.dll", CharSet = CharSet.Ansi)] public static extern int ChangeDisplaySettings(ref DEVMODE devMode, int flags);
@@ -91,11 +94,15 @@ public static class NsCapture
     {
         ShowWindow(hwnd, 9); // SW_RESTORE
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        // Pressing/releasing ALT lifts the foreground lock for this process.
-        keybd_event(0x12, 0, 0, UIntPtr.Zero);
-        keybd_event(0x12, 0, 2, UIntPtr.Zero);
+        // Borrow the foreground thread's input state to lift the foreground lock.
+        // (No synthetic key presses: those would flip the app into keyboard mode
+        // and draw focus rectangles in the screenshots.)
+        uint me = GetCurrentThreadId();
+        uint fg = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
+        bool attached = fg != 0 && fg != me && AttachThreadInput(me, fg, true);
         SetForegroundWindow(hwnd);
         BringWindowToTop(hwnd);
+        if (attached) AttachThreadInput(me, fg, false);
     }
 
     /// <summary>The visible window bounds (excludes the invisible resize borders).</summary>

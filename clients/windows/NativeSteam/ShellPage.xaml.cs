@@ -506,6 +506,15 @@ public sealed partial class ShellPage : Page, IShell
             e.Handled = true;
             return;
         }
+        // A lone modifier (e.g. Alt+Tab away mid-game) isn't keyboard navigation.
+        if (e.Key is VirtualKey.Shift or VirtualKey.Control or VirtualKey.Menu
+            or VirtualKey.LeftShift or VirtualKey.RightShift
+            or VirtualKey.LeftControl or VirtualKey.RightControl
+            or VirtualKey.LeftMenu or VirtualKey.RightMenu
+            or VirtualKey.LeftWindows or VirtualKey.RightWindows)
+        {
+            return;
+        }
         InputModeService.Set(InputMode.Keyboard);
     }
 
